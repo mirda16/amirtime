@@ -1,0 +1,96 @@
+{
+  "common": {
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "edit": "Upravit",
+    "add": "Přidat",
+    "close": "Zavřít",
+    "confirm": "Potvrdit",
+    "comingSoon": "Již brzy"
+  },
+  "nav": {
+    "tasks": "Úkoly",
+    "calendar": "Kalendář",
+    "pomodoro": "Pomodoro",
+    "reports": "Reporty",
+    "settings": "Nastavení",
+    "projects": "Projekty",
+    "tags": "Tagy",
+    "allTasks": "Všechny úkoly"
+  },
+  "tasks": {
+    "title": "Název",
+    "description": "Popis",
+    "dueDate": "Termín",
+    "estimate": "Odhad (minuty)",
+    "newTask": "Nový úkol",
+    "editTask": "Upravit úkol",
+    "noTasks": "Zatím žádné úkoly. Vytvořte první!",
+    "markDone": "Označit jako hotové",
+    "markNotDone": "Označit jako nehotové",
+    "project": "Projekt",
+    "tags": "Tagy",
+    "noProject": "Bez projektu",
+    "deleteConfirm": "Smazat tento úkol?",
+    "titlePlaceholder": "Co je potřeba udělat?",
+    "descriptionPlaceholder": "Doplnit popis...",
+    "timeSpent": "Strávený čas",
+    "startTimer": "Spustit měření času",
+    "stopTimer": "Zastavit měření času",
+    "dragHandle": "Přetáhnout pro změnu pořadí",
+    "tracking": "Měření"
+  },
+  "projects": {
+    "newProject": "Nový projekt",
+    "editProject": "Upravit projekt",
+    "name": "Název",
+    "color": "Barva",
+    "noProjects": "Zatím žádné projekty",
+    "deleteConfirm": "Smazat tento projekt? Úkoly zůstanou, ale ztratí přiřazení k projektu."
+  },
+  "tags": {
+    "newTag": "Nový tag",
+    "editTag": "Upravit tag",
+    "name": "Název",
+    "color": "Barva",
+    "noTags": "Zatím žádné tagy",
+    "deleteConfirm": "Smazat tento tag?"
+  },
+  "pomodoro": {
+    "work": "Práce",
+    "shortBreak": "Krátká pauza",
+    "longBreak": "Dlouhá pauza",
+    "start": "Start",
+    "pause": "Pauza",
+    "reset": "Reset",
+    "cyclesCompleted": "Dokončené cykly: {{count}}",
+    "settingsTitle": "Nastavení Pomodoro",
+    "workMinutes": "Délka práce (minuty)",
+    "shortBreakMinutes": "Délka krátké pauzy (minuty)",
+    "longBreakMinutes": "Délka dlouhé pauzy (minuty)",
+    "cyclesBeforeLongBreak": "Cyklů před dlouhou pauzou",
+    "notificationTitle": "AmirTime",
+    "notificationWorkDone": "Pracovní úsek hotov! Čas na pauzu.",
+    "notificationBreakDone": "Pauza skončila! Zpět do práce."
+  },
+  "settings": {
+    "title": "Nastavení",
+    "language": "Jazyk",
+    "theme": "Téma",
+    "light": "Světlé",
+    "dark": "Tmavé",
+    "auto": "Automaticky",
+    "pomodoroSettings": "Pomodoro"
+  },
+  "calendar": {
+    "title": "Kalendář",
+    "today": "Dnes",
+    "unscheduled": "Nenaplánované",
+    "noUnscheduled": "Žádné nenaplánované úkoly"
+  },
+  "reports": {
+    "title": "Reporty",
+    "info": "Reporty času na úkolech a projektech přibudou v budoucí aktualizaci."
+  }
+}

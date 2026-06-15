@@ -1,0 +1,15 @@
+import { registerNotificationsIpc } from './notifications.ipc'
+import { registerProjectsIpc } from './projects.ipc'
+import { registerSettingsIpc } from './settings.ipc'
+import { registerTagsIpc } from './tags.ipc'
+import { registerTasksIpc } from './tasks.ipc'
+import { registerTimeEntriesIpc } from './timeEntries.ipc'
+
+export function registerIpcHandlers(): void {
+  registerProjectsIpc()
+  registerTagsIpc()
+  registerTasksIpc()
+  registerTimeEntriesIpc()
+  registerSettingsIpc()
+  registerNotificationsIpc()
+}

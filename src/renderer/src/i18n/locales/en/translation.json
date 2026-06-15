@@ -1,0 +1,96 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "comingSoon": "Coming soon"
+  },
+  "nav": {
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "pomodoro": "Pomodoro",
+    "reports": "Reports",
+    "settings": "Settings",
+    "projects": "Projects",
+    "tags": "Tags",
+    "allTasks": "All tasks"
+  },
+  "tasks": {
+    "title": "Title",
+    "description": "Description",
+    "dueDate": "Due date",
+    "estimate": "Estimate (minutes)",
+    "newTask": "New task",
+    "editTask": "Edit task",
+    "noTasks": "No tasks yet. Create your first one!",
+    "markDone": "Mark done",
+    "markNotDone": "Mark not done",
+    "project": "Project",
+    "tags": "Tags",
+    "noProject": "No project",
+    "deleteConfirm": "Delete this task?",
+    "titlePlaceholder": "What needs to be done?",
+    "descriptionPlaceholder": "Add a description...",
+    "timeSpent": "Time spent",
+    "startTimer": "Start tracking time",
+    "stopTimer": "Stop tracking time",
+    "dragHandle": "Drag to reorder",
+    "tracking": "Tracking"
+  },
+  "projects": {
+    "newProject": "New project",
+    "editProject": "Edit project",
+    "name": "Name",
+    "color": "Color",
+    "noProjects": "No projects yet",
+    "deleteConfirm": "Delete this project? Tasks will remain but lose their project."
+  },
+  "tags": {
+    "newTag": "New tag",
+    "editTag": "Edit tag",
+    "name": "Name",
+    "color": "Color",
+    "noTags": "No tags yet",
+    "deleteConfirm": "Delete this tag?"
+  },
+  "pomodoro": {
+    "work": "Work",
+    "shortBreak": "Short break",
+    "longBreak": "Long break",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset",
+    "cyclesCompleted": "Cycles completed: {{count}}",
+    "settingsTitle": "Pomodoro settings",
+    "workMinutes": "Work duration (minutes)",
+    "shortBreakMinutes": "Short break duration (minutes)",
+    "longBreakMinutes": "Long break duration (minutes)",
+    "cyclesBeforeLongBreak": "Cycles before long break",
+    "notificationTitle": "AmirTime",
+    "notificationWorkDone": "Work session complete! Time for a break.",
+    "notificationBreakDone": "Break is over! Back to work."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "Auto",
+    "pomodoroSettings": "Pomodoro"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "today": "Today",
+    "unscheduled": "Unscheduled",
+    "noUnscheduled": "No unscheduled tasks"
+  },
+  "reports": {
+    "title": "Reports",
+    "info": "Time reports per task and project are coming in a future update."
+  }
+}
