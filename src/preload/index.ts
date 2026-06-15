@@ -6,6 +6,7 @@ import type {
   CreateTagInput,
   CreateTaskInput,
   Project,
+  ReportSummary,
   Tag,
   Task,
   TaskFilter,
@@ -56,6 +57,10 @@ const api = {
       ipcRenderer.invoke(IpcChannels.timeEntriesStart, taskId),
     stop: (entryId: string): Promise<{ entry: TimeEntry; task: Task | null }> =>
       ipcRenderer.invoke(IpcChannels.timeEntriesStop, entryId)
+  },
+  reports: {
+    getSummary: (from: string, to: string): Promise<ReportSummary> =>
+      ipcRenderer.invoke(IpcChannels.reportsGetSummary, from, to)
   },
   settings: {
     getAll: (): Promise<AppSettings> => ipcRenderer.invoke(IpcChannels.settingsGetAll),

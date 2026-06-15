@@ -4,6 +4,7 @@ import { IconPlus, IconX } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ColorDot } from '../common/ColorDot'
+import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useUiFilterStore } from '../../stores/uiFilterStore'
@@ -15,6 +16,7 @@ export function ProjectsTagsSidebar() {
 
   const projects = useProjectsStore((s) => s.projects)
   const createProject = useProjectsStore((s) => s.createProject)
+  const updateProject = useProjectsStore((s) => s.updateProject)
   const deleteProject = useProjectsStore((s) => s.deleteProject)
 
   const tags = useTagsStore((s) => s.tags)
@@ -64,7 +66,14 @@ export function ProjectsTagsSidebar() {
         <NavLink
           key={project.id}
           label={project.name}
-          leftSection={<ColorDot color={project.color} />}
+          leftSection={
+            <div onClick={(e) => e.stopPropagation()}>
+              <ColorPickerPopover
+                color={project.color}
+                onChange={(color) => void updateProject(project.id, { color })}
+              />
+            </div>
+          }
           active={selectedProjectId === project.id && location.pathname === '/tasks'}
           onClick={() => {
             setSelectedProjectId(project.id)

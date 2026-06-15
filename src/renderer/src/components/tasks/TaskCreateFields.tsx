@@ -6,11 +6,14 @@ import {
   NumberInput,
   Select,
   Stack,
+  Text,
   Textarea,
   TextInput
 } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useTranslation } from 'react-i18next'
+import type { TaskPriority } from '@shared/types'
+import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useTasksStore } from '../../stores/tasksStore'
@@ -32,6 +35,8 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
   const [tagIds, setTagIds] = useState<string[]>([])
   const [dueDate, setDueDate] = useState<string | null>(null)
   const [estimate, setEstimate] = useState<number | ''>('')
+  const [color, setColor] = useState<string | null>(null)
+  const [priority, setPriority] = useState<TaskPriority>('none')
 
   const handleCreate = async () => {
     if (!title.trim()) return
@@ -39,6 +44,8 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
       title: title.trim(),
       description: description || null,
       projectId,
+      color,
+      priority,
       tagIds,
       dueDate,
       timeEstimateMinutes: estimate === '' ? null : Number(estimate)
@@ -64,14 +71,23 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
         minRows={2}
         autosize
       />
-      <Select
-        label={t('tasks.project')}
-        placeholder={t('tasks.noProject')}
-        clearable
-        value={projectId}
-        onChange={setProjectId}
-        data={projects.map((p) => ({ value: p.id, label: p.name }))}
-      />
+      <Group align="flex-end">
+        <Select
+          style={{ flex: 1 }}
+          label={t('tasks.project')}
+          placeholder={t('tasks.noProject')}
+          clearable
+          value={projectId}
+          onChange={setProjectId}
+          data={projects.map((p) => ({ value: p.id, label: p.name }))}
+        />
+        <div>
+          <Text size="sm" fw={500} mb={4}>
+            {t('common.color')}
+          </Text>
+          <ColorPickerPopover color={color} onChange={setColor} />
+        </div>
+      </Group>
       <MultiSelect
         label={t('tasks.tags')}
         value={tagIds}
@@ -85,12 +101,25 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
           onChange={setDueDate}
           clearable
           valueFormat="DD.MM.YYYY"
+          highlightToday
         />
         <NumberInput
           label={t('tasks.estimate')}
           value={estimate}
           onChange={(value) => setEstimate(value === '' ? '' : Number(value))}
           min={0}
+        />
+        <Select
+          label={t('tasks.priority')}
+          value={priority}
+          onChange={(value) => setPriority((value ?? 'none') as TaskPriority)}
+          data={[
+            { value: 'none', label: t('tasks.priorityNone') },
+            { value: 'low', label: t('tasks.priorityLow') },
+            { value: 'medium', label: t('tasks.priorityMedium') },
+            { value: 'high', label: t('tasks.priorityHigh') }
+          ]}
+          allowDeselect={false}
         />
       </Group>
       <Group justify="flex-end" mt="md">

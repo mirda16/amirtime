@@ -16,11 +16,15 @@ export interface Tag {
   updatedAt: string
 }
 
+export type TaskPriority = 'none' | 'low' | 'medium' | 'high'
+
 export interface Task {
   id: string
   title: string
   description: string | null
   projectId: string | null
+  color: string | null
+  priority: TaskPriority
   isDone: boolean
   doneAt: string | null
   dueDate: string | null
@@ -60,6 +64,8 @@ export interface CreateTaskInput {
   title: string
   description?: string | null
   projectId?: string | null
+  color?: string | null
+  priority?: TaskPriority
   dueDate?: string | null
   timeEstimateMinutes?: number | null
   tagIds?: string[]
@@ -69,6 +75,8 @@ export interface UpdateTaskInput {
   title?: string
   description?: string | null
   projectId?: string | null
+  color?: string | null
+  priority?: TaskPriority
   isDone?: boolean
   dueDate?: string | null
   scheduledAt?: string | null
@@ -96,6 +104,35 @@ export interface TaskFilter {
   projectId?: string | null
   tagId?: string | null
   includeDone?: boolean
+}
+
+export interface ReportRange {
+  from: string
+  to: string
+}
+
+export interface ReportDayTotal {
+  date: string
+  totalSeconds: number
+}
+
+export interface ReportProjectTotal {
+  projectId: string | null
+  totalSeconds: number
+}
+
+export interface ReportTaskTotal {
+  taskId: string
+  title: string
+  projectId: string | null
+  totalSeconds: number
+}
+
+export interface ReportSummary {
+  totalSeconds: number
+  byDay: ReportDayTotal[]
+  byProject: ReportProjectTotal[]
+  byTask: ReportTaskTotal[]
 }
 
 export interface PomodoroSettings {

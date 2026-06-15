@@ -2,13 +2,17 @@ import path from 'node:path'
 import { app } from 'electron'
 import Database from 'better-sqlite3'
 import migration001 from './migrations/001_init.sql?raw'
+import migration002 from './migrations/002_task_extras.sql?raw'
 
 interface Migration {
   version: number
   sql: string
 }
 
-const MIGRATIONS: Migration[] = [{ version: 1, sql: migration001 }]
+const MIGRATIONS: Migration[] = [
+  { version: 1, sql: migration001 },
+  { version: 2, sql: migration002 }
+]
 
 let db: Database.Database | null = null
 

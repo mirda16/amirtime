@@ -1,13 +1,15 @@
 import { randomUUID } from 'node:crypto'
 import type Database from 'better-sqlite3'
 import { getDb } from '../index'
-import type { CreateTaskInput, Task, TaskFilter, UpdateTaskInput } from '@shared/types'
+import type { CreateTaskInput, Task, TaskFilter, TaskPriority, UpdateTaskInput } from '@shared/types'
 
 interface TaskRow {
   id: string
   title: string
   description: string | null
   project_id: string | null
+  color: string | null
+  priority: string
   is_done: number
   done_at: string | null
   due_date: string | null
@@ -26,6 +28,8 @@ function mapRow(row: TaskRow, tagIds: string[]): Task {
     title: row.title,
     description: row.description,
     projectId: row.project_id,
+    color: row.color,
+    priority: row.priority as TaskPriority,
     isDone: !!row.is_done,
     doneAt: row.done_at,
     dueDate: row.due_date,
@@ -104,14 +108,16 @@ export const tasksRepo = {
 
     db.prepare(
       `INSERT INTO tasks (
-        id, title, description, project_id, is_done,
+        id, title, description, project_id, color, priority, is_done,
         due_date, time_estimate_minutes, sort_order, time_spent_seconds, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?)`
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?)`
     ).run(
       id,
       input.title,
       input.description ?? null,
       input.projectId ?? null,
+      input.color ?? null,
+      input.priority ?? 'none',
       input.dueDate ?? null,
       input.timeEstimateMinutes ?? null,
       maxOrder + 1,
@@ -140,7 +146,7 @@ export const tasksRepo = {
 
     db.prepare(
       `UPDATE tasks SET
-        title = ?, description = ?, project_id = ?, is_done = ?, done_at = ?,
+        title = ?, description = ?, project_id = ?, color = ?, priority = ?, is_done = ?, done_at = ?,
         due_date = ?, scheduled_at = ?, scheduled_end = ?, time_estimate_minutes = ?,
         sort_order = ?, updated_at = ?
        WHERE id = ?`
@@ -148,6 +154,8 @@ export const tasksRepo = {
       patch.title ?? existing.title,
       patch.description !== undefined ? patch.description : existing.description,
       patch.projectId !== undefined ? patch.projectId : existing.project_id,
+      patch.color !== undefined ? patch.color : existing.color,
+      patch.priority ?? existing.priority,
       isDone ? 1 : 0,
       doneAt,
       patch.dueDate !== undefined ? patch.dueDate : existing.due_date,

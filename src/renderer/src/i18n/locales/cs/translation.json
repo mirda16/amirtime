@@ -7,7 +7,9 @@
     "add": "Přidat",
     "close": "Zavřít",
     "confirm": "Potvrdit",
-    "comingSoon": "Již brzy"
+    "comingSoon": "Již brzy",
+    "color": "Barva",
+    "clearColor": "Zrušit barvu"
   },
   "nav": {
     "tasks": "Úkoly",
@@ -39,7 +41,12 @@
     "startTimer": "Spustit měření času",
     "stopTimer": "Zastavit měření času",
     "dragHandle": "Přetáhnout pro změnu pořadí",
-    "tracking": "Měření"
+    "tracking": "Měření",
+    "priority": "Priorita",
+    "priorityNone": "Žádná",
+    "priorityLow": "Nízká",
+    "priorityMedium": "Střední",
+    "priorityHigh": "Vysoká"
   },
   "projects": {
     "newProject": "Nový projekt",
@@ -91,6 +98,19 @@
   },
   "reports": {
     "title": "Reporty",
-    "info": "Reporty času na úkolech a projektech přibudou v budoucí aktualizaci."
+    "presetThisWeek": "Tento týden",
+    "presetLastWeek": "Minulý týden",
+    "presetThisMonth": "Tento měsíc",
+    "presetLastMonth": "Minulý měsíc",
+    "presetCustom": "Vlastní",
+    "selectRange": "Vyberte rozsah dat",
+    "totalTime": "Celkový sledovaný čas",
+    "byDay": "Čas po dnech",
+    "byProject": "Čas po projektech",
+    "byTask": "Čas po úkolech",
+    "hours": "Hodiny",
+    "time": "Čas",
+    "share": "Podíl",
+    "noData": "V tomto období nebyl zaznamenán žádný čas."
   }
 }

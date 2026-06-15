@@ -28,7 +28,8 @@ export function UnscheduledTaskCard({ task, project, onOpen }: UnscheduledTaskCa
         cursor: 'grab',
         transform: CSS.Translate.toString(transform),
         opacity: isDragging ? 0.4 : 1,
-        zIndex: isDragging ? 100 : undefined
+        zIndex: isDragging ? 100 : undefined,
+        borderLeft: task.color ? `4px solid ${task.color}` : undefined
       }}
     >
       <Text size="sm" fw={500} truncate>

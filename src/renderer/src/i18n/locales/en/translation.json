@@ -7,7 +7,9 @@
     "add": "Add",
     "close": "Close",
     "confirm": "Confirm",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "color": "Color",
+    "clearColor": "Clear color"
   },
   "nav": {
     "tasks": "Tasks",
@@ -39,7 +41,12 @@
     "startTimer": "Start tracking time",
     "stopTimer": "Stop tracking time",
     "dragHandle": "Drag to reorder",
-    "tracking": "Tracking"
+    "tracking": "Tracking",
+    "priority": "Priority",
+    "priorityNone": "None",
+    "priorityLow": "Low",
+    "priorityMedium": "Medium",
+    "priorityHigh": "High"
   },
   "projects": {
     "newProject": "New project",
@@ -91,6 +98,19 @@
   },
   "reports": {
     "title": "Reports",
-    "info": "Time reports per task and project are coming in a future update."
+    "presetThisWeek": "This week",
+    "presetLastWeek": "Last week",
+    "presetThisMonth": "This month",
+    "presetLastMonth": "Last month",
+    "presetCustom": "Custom",
+    "selectRange": "Select date range",
+    "totalTime": "Total tracked time",
+    "byDay": "Time per day",
+    "byProject": "Time per project",
+    "byTask": "Time per task",
+    "hours": "Hours",
+    "time": "Time",
+    "share": "Share",
+    "noData": "No tracked time in this period."
   }
 }

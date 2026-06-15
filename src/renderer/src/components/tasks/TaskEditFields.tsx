@@ -6,13 +6,15 @@ import {
   NumberInput,
   Select,
   Stack,
+  Text,
   Textarea,
   TextInput
 } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useDebouncedCallback } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
-import type { Task, UpdateTaskInput } from '@shared/types'
+import type { Task, TaskPriority, UpdateTaskInput } from '@shared/types'
+import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useTasksStore } from '../../stores/tasksStore'
@@ -35,6 +37,8 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const [tagIds, setTagIds] = useState<string[]>(task.tagIds)
   const [dueDate, setDueDate] = useState<string | null>(task.dueDate ?? null)
   const [estimate, setEstimate] = useState<number | ''>(task.timeEstimateMinutes ?? '')
+  const [color, setColor] = useState<string | null>(task.color)
+  const [priority, setPriority] = useState<TaskPriority>(task.priority)
 
   useEffect(() => {
     setTitle(task.title)
@@ -43,6 +47,8 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     setTagIds(task.tagIds)
     setDueDate(task.dueDate ?? null)
     setEstimate(task.timeEstimateMinutes ?? '')
+    setColor(task.color)
+    setPriority(task.priority)
   }, [task])
 
   const debouncedUpdate = useDebouncedCallback((patch: UpdateTaskInput) => {
@@ -80,6 +86,17 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     void updateTask(task.id, { timeEstimateMinutes: num })
   }
 
+  const handleColorChange = (value: string | null) => {
+    setColor(value)
+    void updateTask(task.id, { color: value })
+  }
+
+  const handlePriorityChange = (value: string | null) => {
+    const next = (value ?? 'none') as TaskPriority
+    setPriority(next)
+    void updateTask(task.id, { priority: next })
+  }
+
   const handleDelete = async () => {
     await deleteTask(task.id)
     onClose()
@@ -103,14 +120,23 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
         minRows={2}
         autosize
       />
-      <Select
-        label={t('tasks.project')}
-        placeholder={t('tasks.noProject')}
-        clearable
-        value={projectId}
-        onChange={handleProjectChange}
-        data={projects.map((p) => ({ value: p.id, label: p.name }))}
-      />
+      <Group align="flex-end">
+        <Select
+          style={{ flex: 1 }}
+          label={t('tasks.project')}
+          placeholder={t('tasks.noProject')}
+          clearable
+          value={projectId}
+          onChange={handleProjectChange}
+          data={projects.map((p) => ({ value: p.id, label: p.name }))}
+        />
+        <div>
+          <Text size="sm" fw={500} mb={4}>
+            {t('common.color')}
+          </Text>
+          <ColorPickerPopover color={color} onChange={handleColorChange} />
+        </div>
+      </Group>
       <MultiSelect
         label={t('tasks.tags')}
         value={tagIds}
@@ -124,12 +150,25 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
           onChange={handleDueDateChange}
           clearable
           valueFormat="DD.MM.YYYY"
+          highlightToday
         />
         <NumberInput
           label={t('tasks.estimate')}
           value={estimate}
           onChange={handleEstimateChange}
           min={0}
+        />
+        <Select
+          label={t('tasks.priority')}
+          value={priority}
+          onChange={handlePriorityChange}
+          data={[
+            { value: 'none', label: t('tasks.priorityNone') },
+            { value: 'low', label: t('tasks.priorityLow') },
+            { value: 'medium', label: t('tasks.priorityMedium') },
+            { value: 'high', label: t('tasks.priorityHigh') }
+          ]}
+          allowDeselect={false}
         />
       </Group>
       <Group justify="space-between" mt="md">

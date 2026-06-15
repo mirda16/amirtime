@@ -1,5 +1,6 @@
 import { ActionIcon, Badge, Checkbox, Group, Text } from '@mantine/core'
 import {
+  IconFlag,
   IconGripVertical,
   IconPlayerPlay,
   IconPlayerStop,
@@ -10,6 +11,7 @@ import type { HTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Project, Tag, Task } from '@shared/types'
 import { formatDuration } from '../../utils/formatDuration'
+import { PRIORITY_COLORS } from '../../utils/priority'
 import { ColorDot } from '../common/ColorDot'
 
 interface TaskListItemProps {
@@ -46,7 +48,10 @@ export function TaskListItem({
       gap="sm"
       py="xs"
       px="sm"
-      style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}
+      style={{
+        borderBottom: '1px solid var(--mantine-color-default-border)',
+        borderLeft: task.color ? `4px solid ${task.color}` : undefined
+      }}
     >
       {dragHandleProps && (
         <div
@@ -68,6 +73,16 @@ export function TaskListItem({
           {task.title}
         </Text>
         <Group gap="xs" mt={2}>
+          {task.priority !== 'none' && (
+            <Badge
+              size="xs"
+              color={PRIORITY_COLORS[task.priority]}
+              variant="light"
+              leftSection={<IconFlag size={10} />}
+            >
+              {t(`tasks.priority${task.priority.charAt(0).toUpperCase()}${task.priority.slice(1)}`)}
+            </Badge>
+          )}
           {project && (
             <Badge size="xs" variant="light" leftSection={<ColorDot color={project.color} />}>
               {project.name}

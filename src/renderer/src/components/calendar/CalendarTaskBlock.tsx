@@ -57,6 +57,10 @@ export function CalendarTaskBlock({
     window.addEventListener('pointerup', handleUp)
   }
 
+  const customColor = task.color ?? project?.color ?? null
+  const background = customColor ?? 'var(--mantine-color-blue-light)'
+  const textColor = customColor ? 'white' : undefined
+
   return (
     <div
       ref={setNodeRef}
@@ -72,7 +76,7 @@ export function CalendarTaskBlock({
         transform: CSS.Translate.toString(transform),
         opacity: isDragging ? 0.4 : 1,
         zIndex: isDragging ? 100 : 1,
-        background: project?.color ?? 'var(--mantine-color-blue-light)',
+        background,
         borderRadius: 4,
         padding: '2px 6px',
         cursor: 'grab',
@@ -80,13 +84,13 @@ export function CalendarTaskBlock({
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}>
-        <Text size="xs" fw={500} truncate c={project?.color ? 'white' : undefined}>
+        <Text size="xs" fw={500} truncate c={textColor}>
           {task.title}
         </Text>
         <ActionIcon
           size="xs"
           variant="transparent"
-          c={project?.color ? 'white' : undefined}
+          c={textColor}
           onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation()

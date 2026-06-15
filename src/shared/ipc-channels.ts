@@ -22,6 +22,8 @@ export const IpcChannels = {
   timeEntriesStart: 'timeEntries:start',
   timeEntriesStop: 'timeEntries:stop',
 
+  reportsGetSummary: 'reports:getSummary',
+
   settingsGetAll: 'settings:getAll',
   settingsSet: 'settings:set',
 
