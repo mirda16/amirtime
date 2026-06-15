@@ -5,6 +5,8 @@ import type {
   CreateProjectInput,
   CreateTagInput,
   CreateTaskInput,
+  ExportResult,
+  ImportResult,
   Project,
   ReportSummary,
   Tag,
@@ -70,6 +72,10 @@ const api = {
   notifications: {
     show: (opts: { title: string; body: string }): Promise<void> =>
       ipcRenderer.invoke(IpcChannels.notificationsShow, opts)
+  },
+  dataIO: {
+    exportAll: (): Promise<ExportResult> => ipcRenderer.invoke(IpcChannels.dataIoExportAll),
+    importAll: (): Promise<ImportResult> => ipcRenderer.invoke(IpcChannels.dataIoImportAll)
   }
 }
 

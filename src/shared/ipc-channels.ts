@@ -24,6 +24,9 @@ export const IpcChannels = {
 
   reportsGetSummary: 'reports:getSummary',
 
+  dataIoExportAll: 'dataIO:exportAll',
+  dataIoImportAll: 'dataIO:importAll',
+
   settingsGetAll: 'settings:getAll',
   settingsSet: 'settings:set',
 

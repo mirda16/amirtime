@@ -88,7 +88,15 @@
     "light": "Světlé",
     "dark": "Tmavé",
     "auto": "Automaticky",
-    "pomodoroSettings": "Pomodoro"
+    "pomodoroSettings": "Pomodoro",
+    "dataSection": "Data",
+    "dataDescription": "Exportujte všechna svá data do souboru pro zálohu, nebo je později importujte zpět.",
+    "exportData": "Exportovat data",
+    "importData": "Importovat data",
+    "importWarning": "Import nahradí všechny stávající projekty, štítky, úkoly a časové záznamy obsahem vybraného souboru. Tuto akci nelze vrátit.",
+    "exportSuccess": "Data byla úspěšně exportována",
+    "importSuccess": "Data byla úspěšně importována",
+    "importError": "Import dat se nezdařil. Soubor může být neplatný nebo z novější verze."
   },
   "calendar": {
     "title": "Kalendář",

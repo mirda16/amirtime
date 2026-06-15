@@ -148,6 +148,32 @@ export interface AppSettings {
   pomodoro: PomodoroSettings
 }
 
+export interface ExportTables {
+  projects: Record<string, unknown>[]
+  tags: Record<string, unknown>[]
+  tasks: Record<string, unknown>[]
+  taskTags: Record<string, unknown>[]
+  timeEntries: Record<string, unknown>[]
+  settings: Record<string, unknown>[]
+}
+
+export interface ExportData {
+  schemaVersion: number
+  exportedAt: string
+  tables: ExportTables
+}
+
+export interface ExportResult {
+  canceled: boolean
+  filePath?: string
+}
+
+export interface ImportResult {
+  canceled: boolean
+  success?: boolean
+  error?: 'invalidFile'
+}
+
 export const DEFAULT_SETTINGS: AppSettings = {
   language: 'en',
   theme: 'auto',

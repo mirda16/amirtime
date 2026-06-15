@@ -88,7 +88,15 @@
     "light": "Light",
     "dark": "Dark",
     "auto": "Auto",
-    "pomodoroSettings": "Pomodoro"
+    "pomodoroSettings": "Pomodoro",
+    "dataSection": "Data",
+    "dataDescription": "Export all your data to a file for backup, or import it back later.",
+    "exportData": "Export data",
+    "importData": "Import data",
+    "importWarning": "Importing will replace all existing projects, tags, tasks and time entries with the contents of the chosen file. This cannot be undone.",
+    "exportSuccess": "Data exported successfully",
+    "importSuccess": "Data imported successfully",
+    "importError": "Failed to import data. The file may be invalid or from a newer version."
   },
   "calendar": {
     "title": "Calendar",

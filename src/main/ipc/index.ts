@@ -1,3 +1,4 @@
+import { registerDataIoIpc } from './dataIo.ipc'
 import { registerNotificationsIpc } from './notifications.ipc'
 import { registerProjectsIpc } from './projects.ipc'
 import { registerReportsIpc } from './reports.ipc'
@@ -14,4 +15,5 @@ export function registerIpcHandlers(): void {
   registerReportsIpc()
   registerSettingsIpc()
   registerNotificationsIpc()
+  registerDataIoIpc()
 }

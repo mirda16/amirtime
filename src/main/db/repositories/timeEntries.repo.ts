@@ -29,6 +29,13 @@ function mapRow(row: TimeEntryRow): TimeEntry {
 }
 
 export const timeEntriesRepo = {
+  getAll(): TimeEntry[] {
+    const rows = getDb()
+      .prepare('SELECT * FROM time_entries ORDER BY started_at ASC')
+      .all() as TimeEntryRow[]
+    return rows.map(mapRow)
+  },
+
   getActive(): TimeEntry | null {
     const row = getDb()
       .prepare('SELECT * FROM time_entries WHERE ended_at IS NULL ORDER BY started_at DESC LIMIT 1')

@@ -1,7 +1,13 @@
-import { NumberInput, Select, SegmentedControl, Stack, Text, Title } from '@mantine/core'
+import { useState } from 'react'
+import { Button, Group, Modal, NumberInput, Select, SegmentedControl, Stack, Text, Title } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import type { AppSettings } from '@shared/types'
+import { useProjectsStore } from '../stores/projectsStore'
 import { useSettingsStore } from '../stores/settingsStore'
+import { useTagsStore } from '../stores/tagsStore'
+import { useTasksStore } from '../stores/tasksStore'
+import { useTimerStore } from '../stores/timerStore'
 
 export default function SettingsPage() {
   const { t } = useTranslation()
@@ -9,6 +15,48 @@ export default function SettingsPage() {
   const setLanguage = useSettingsStore((s) => s.setLanguage)
   const setTheme = useSettingsStore((s) => s.setTheme)
   const setPomodoroSettings = useSettingsStore((s) => s.setPomodoroSettings)
+  const loadSettings = useSettingsStore((s) => s.loadSettings)
+  const loadProjects = useProjectsStore((s) => s.loadProjects)
+  const loadTags = useTagsStore((s) => s.loadTags)
+  const loadTasks = useTasksStore((s) => s.loadTasks)
+  const initTimer = useTimerStore((s) => s.init)
+  const resetTimer = useTimerStore((s) => s.reset)
+
+  const [importModalOpen, setImportModalOpen] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
+
+  const handleExport = async () => {
+    setIsExporting(true)
+    try {
+      const result = await window.api.dataIO.exportAll()
+      if (!result.canceled) {
+        notifications.show({ message: t('settings.exportSuccess'), color: 'green' })
+      }
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const handleImport = async () => {
+    setImportModalOpen(false)
+    setIsImporting(true)
+    try {
+      const result = await window.api.dataIO.importAll()
+      if (result.canceled) return
+
+      if (result.success) {
+        resetTimer()
+        await Promise.all([loadSettings(), loadProjects(), loadTags(), loadTasks()])
+        await initTimer()
+        notifications.show({ message: t('settings.importSuccess'), color: 'green' })
+      } else {
+        notifications.show({ message: t('settings.importError'), color: 'red' })
+      }
+    } finally {
+      setIsImporting(false)
+    }
+  }
 
   return (
     <Stack gap="lg" maw={420}>
@@ -74,6 +122,37 @@ export default function SettingsPage() {
           setPomodoroSettings({ ...settings.pomodoro, cyclesBeforeLongBreak: Number(value) || 1 })
         }
       />
+
+      <Title order={4}>{t('settings.dataSection')}</Title>
+      <Text size="sm" c="dimmed">
+        {t('settings.dataDescription')}
+      </Text>
+      <Group>
+        <Button onClick={handleExport} loading={isExporting}>
+          {t('settings.exportData')}
+        </Button>
+        <Button color="red" variant="light" onClick={() => setImportModalOpen(true)} loading={isImporting}>
+          {t('settings.importData')}
+        </Button>
+      </Group>
+
+      <Modal
+        opened={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        title={t('settings.importData')}
+      >
+        <Stack gap="md">
+          <Text size="sm">{t('settings.importWarning')}</Text>
+          <Group justify="flex-end">
+            <Button variant="default" onClick={() => setImportModalOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button color="red" onClick={handleImport}>
+              {t('common.confirm')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Stack>
   )
 }

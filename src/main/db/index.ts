@@ -14,6 +14,8 @@ const MIGRATIONS: Migration[] = [
   { version: 2, sql: migration002 }
 ]
 
+export const CURRENT_SCHEMA_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version
+
 let db: Database.Database | null = null
 
 export function getDb(): Database.Database {
