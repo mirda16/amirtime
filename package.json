@@ -11,8 +11,8 @@
     "start": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "postinstall": "electron-rebuild -f -w better-sqlite3",
-    "dist:win": "electron-vite build && electron-builder --win",
-    "dist:linux": "electron-vite build && electron-builder --linux"
+    "dist:win": "electron-vite build && electron-builder --win --publish never",
+    "dist:linux": "electron-vite build && electron-builder --linux --publish never"
   },
   "build": {
     "appId": "com.mira.amirtime",
@@ -39,8 +39,7 @@
       "target": [
         "AppImage"
       ],
-      "category": "Office",
-      "desktopName": "AmirTime.desktop"
+      "category": "Office"
     }
   },
   "dependencies": {
