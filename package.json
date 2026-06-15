@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Personal task and time management app",
   "main": "./out/main/index.js",
-  "author": "Mira",
+  "author": "Mira <mirda16@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "electron-vite dev",
@@ -11,7 +11,8 @@
     "start": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "postinstall": "electron-rebuild -f -w better-sqlite3",
-    "dist:win": "electron-vite build && electron-builder --win"
+    "dist:win": "electron-vite build && electron-builder --win",
+    "dist:linux": "electron-vite build && electron-builder --linux"
   },
   "build": {
     "appId": "com.mira.amirtime",
@@ -33,6 +34,13 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office",
+      "desktopName": "AmirTime.desktop"
     }
   },
   "dependencies": {
