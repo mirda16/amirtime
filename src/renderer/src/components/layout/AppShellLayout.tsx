@@ -1,5 +1,5 @@
 import { ActionIcon, AppShell, Badge, Burger, Group, NavLink, ScrollArea, Text, Title } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useHotkeys } from '@mantine/hooks'
 import {
   IconCalendarWeek,
   IconChecklist,
@@ -10,6 +10,7 @@ import {
 } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { usePomodoroStore } from '../../stores/pomodoroStore'
 import { useTasksStore } from '../../stores/tasksStore'
 import { useTimerStore } from '../../stores/timerStore'
 import { formatDuration } from '../../utils/formatDuration'
@@ -34,6 +35,14 @@ export function AppShellLayout() {
   const trackedTask = useTasksStore((s) =>
     activeEntry ? s.tasks.find((task) => task.id === activeEntry.taskId) : undefined
   )
+  const pomodoroIsRunning = usePomodoroStore((s) => s.isRunning)
+  const pomodoroStart = usePomodoroStore((s) => s.start)
+  const pomodoroPause = usePomodoroStore((s) => s.pause)
+
+  useHotkeys([
+    ['p', () => void navigate('/pomodoro')],
+    ['space', () => (pomodoroIsRunning ? pomodoroPause() : pomodoroStart())]
+  ])
 
   return (
     <AppShell
@@ -57,6 +66,11 @@ export function AppShellLayout() {
               </Text>
               <Text size="sm" fw={700} ff="monospace">
                 {formatDuration(elapsedSeconds)}
+                {trackedTask.timeSpentSeconds > 0 && (
+                  <Text span size="sm" fw={400} c="dimmed" ff="monospace">
+                    {' '}({formatDuration(trackedTask.timeSpentSeconds + elapsedSeconds)})
+                  </Text>
+                )}
               </Text>
               <ActionIcon variant="subtle" color="red" onClick={() => void stopTimer()}>
                 <IconPlayerStop size={16} />

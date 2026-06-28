@@ -36,6 +36,7 @@ export interface Task {
   createdAt: string
   updatedAt: string
   tagIds: string[]
+  subtasks: Subtask[]
 }
 
 export interface CreateProjectInput {
@@ -84,6 +85,25 @@ export interface UpdateTaskInput {
   timeEstimateMinutes?: number | null
   sortOrder?: number
   tagIds?: string[]
+}
+
+export interface Subtask {
+  id: string
+  taskId: string
+  title: string
+  isDone: boolean
+  sortOrder: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateSubtaskInput {
+  title: string
+}
+
+export interface UpdateSubtaskInput {
+  title?: string
+  isDone?: boolean
 }
 
 export type TimeEntryType = 'manual' | 'pomodoro_work' | 'pomodoro_break'

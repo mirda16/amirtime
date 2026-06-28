@@ -3,6 +3,7 @@ import { IpcChannels } from '@shared/ipc-channels'
 import type {
   AppSettings,
   CreateProjectInput,
+  CreateSubtaskInput,
   CreateTagInput,
   CreateTaskInput,
   ExportResult,
@@ -14,6 +15,7 @@ import type {
   TaskFilter,
   TimeEntry,
   UpdateProjectInput,
+  UpdateSubtaskInput,
   UpdateTagInput,
   UpdateTaskInput
 } from '@shared/types'
@@ -76,6 +78,14 @@ const api = {
   dataIO: {
     exportAll: (): Promise<ExportResult> => ipcRenderer.invoke(IpcChannels.dataIoExportAll),
     importAll: (): Promise<ImportResult> => ipcRenderer.invoke(IpcChannels.dataIoImportAll)
+  },
+  subtasks: {
+    create: (taskId: string, input: CreateSubtaskInput): Promise<Task> =>
+      ipcRenderer.invoke(IpcChannels.subtasksCreate, taskId, input),
+    update: (subtaskId: string, taskId: string, patch: UpdateSubtaskInput): Promise<Task> =>
+      ipcRenderer.invoke(IpcChannels.subtasksUpdate, subtaskId, taskId, patch),
+    delete: (subtaskId: string, taskId: string): Promise<Task> =>
+      ipcRenderer.invoke(IpcChannels.subtasksDelete, subtaskId, taskId)
   }
 }
 

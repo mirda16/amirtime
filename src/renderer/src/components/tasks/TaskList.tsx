@@ -15,6 +15,7 @@ interface TaskListProps {
   onOpen: (task: Task) => void
   onDelete: (id: string) => void
   onReorder: (orderedIds: string[]) => void
+  onStartPomodoro?: (taskId: string) => void
 }
 
 function SortableTaskListItem(props: Omit<Parameters<typeof TaskListItem>[0], 'dragHandleProps'>) {
@@ -42,7 +43,8 @@ export function TaskList({
   onToggleDone,
   onOpen,
   onDelete,
-  onReorder
+  onReorder,
+  onStartPomodoro
 }: TaskListProps) {
   const { t } = useTranslation()
   const activeEntry = useTimerStore((s) => s.activeEntry)
@@ -94,7 +96,8 @@ export function TaskList({
     onToggleDone: () => onToggleDone(task.id),
     onOpen: () => onOpen(task),
     onDelete: () => onDelete(task.id),
-    onToggleTimer: () => handleToggleTimer(task.id)
+    onToggleTimer: () => handleToggleTimer(task.id),
+    onStartPomodoro: onStartPomodoro ? () => onStartPomodoro(task.id) : undefined
   })
 
   return (

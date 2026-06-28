@@ -1,4 +1,5 @@
 import { registerDataIoIpc } from './dataIo.ipc'
+import { registerSubtasksIpc } from './subtasks.ipc'
 import { registerNotificationsIpc } from './notifications.ipc'
 import { registerProjectsIpc } from './projects.ipc'
 import { registerReportsIpc } from './reports.ipc'
@@ -16,4 +17,5 @@ export function registerIpcHandlers(): void {
   registerSettingsIpc()
   registerNotificationsIpc()
   registerDataIoIpc()
+  registerSubtasksIpc()
 }

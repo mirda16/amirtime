@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import type Database from 'better-sqlite3'
 import { getDb } from '../index'
 import type { CreateTaskInput, Task, TaskFilter, TaskPriority, UpdateTaskInput } from '@shared/types'
+import { subtasksRepo } from './subtasks.repo'
 
 interface TaskRow {
   id: string
@@ -40,7 +41,8 @@ function mapRow(row: TaskRow, tagIds: string[]): Task {
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-    tagIds
+    tagIds,
+    subtasks: subtasksRepo.getByTaskId(row.id)
   }
 }
 

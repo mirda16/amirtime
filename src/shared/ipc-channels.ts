@@ -27,6 +27,10 @@ export const IpcChannels = {
   dataIoExportAll: 'dataIO:exportAll',
   dataIoImportAll: 'dataIO:importAll',
 
+  subtasksCreate: 'subtasks:create',
+  subtasksUpdate: 'subtasks:update',
+  subtasksDelete: 'subtasks:delete',
+
   settingsGetAll: 'settings:getAll',
   settingsSet: 'settings:set',
 

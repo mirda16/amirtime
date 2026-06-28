@@ -1,5 +1,6 @@
 import { ActionIcon, Badge, Checkbox, Group, Text } from '@mantine/core'
 import {
+  IconClockPlay,
   IconFlag,
   IconGripVertical,
   IconPlayerPlay,
@@ -24,6 +25,7 @@ interface TaskListItemProps {
   onOpen: () => void
   onDelete: () => void
   onToggleTimer: () => void
+  onStartPomodoro?: () => void
   dragHandleProps?: HTMLAttributes<HTMLDivElement>
 }
 
@@ -37,6 +39,7 @@ export function TaskListItem({
   onOpen,
   onDelete,
   onToggleTimer,
+  onStartPomodoro,
   dragHandleProps
 }: TaskListItemProps) {
   const { t } = useTranslation()
@@ -108,6 +111,19 @@ export function TaskListItem({
               {task.timeEstimateMinutes} min
             </Badge>
           )}
+          {task.subtasks.length > 0 && (() => {
+            const done = task.subtasks.filter((s) => s.isDone).length
+            const total = task.subtasks.length
+            return (
+              <Badge
+                size="xs"
+                color={done === total ? 'green' : 'gray'}
+                variant={done === total ? 'light' : 'outline'}
+              >
+                {done}/{total}
+              </Badge>
+            )
+          })()}
           {totalSeconds > 0 && (
             <Badge size="xs" color={isTracking ? 'red' : 'gray'} variant={isTracking ? 'filled' : 'outline'}>
               {formatDuration(totalSeconds)}
@@ -115,6 +131,16 @@ export function TaskListItem({
           )}
         </Group>
       </div>
+      {!task.isDone && onStartPomodoro && (
+        <ActionIcon
+          variant="subtle"
+          color="orange"
+          onClick={onStartPomodoro}
+          aria-label={t('pomodoro.startForTask')}
+        >
+          <IconClockPlay size={16} />
+        </ActionIcon>
+      )}
       {!task.isDone && (
         <ActionIcon
           variant="subtle"

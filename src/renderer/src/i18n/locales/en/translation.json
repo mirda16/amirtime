@@ -41,6 +41,13 @@
     "startTimer": "Start tracking time",
     "stopTimer": "Stop tracking time",
     "dragHandle": "Drag to reorder",
+    "subtasks": "Subtasks",
+    "addSubtask": "Add subtask…",
+    "search": "Search tasks…",
+    "sortDefault": "Default order",
+    "sortPriority": "By priority",
+    "sortDueDate": "By due date",
+    "sortTimeSpent": "By time spent",
     "tracking": "Tracking",
     "priority": "Priority",
     "priorityNone": "None",
@@ -79,7 +86,12 @@
     "cyclesBeforeLongBreak": "Cycles before long break",
     "notificationTitle": "AmirTime",
     "notificationWorkDone": "Work session complete! Time for a break.",
-    "notificationBreakDone": "Break is over! Back to work."
+    "notificationBreakDone": "Break is over! Back to work.",
+    "startForTask": "Start Pomodoro for this task",
+    "currentTask": "Working on",
+    "noLinkedTask": "No task linked — select one below or from the task list",
+    "todayTasks": "Today's tasks",
+    "active": "Active"
   },
   "settings": {
     "title": "Settings",

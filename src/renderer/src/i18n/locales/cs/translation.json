@@ -41,6 +41,13 @@
     "startTimer": "Spustit měření času",
     "stopTimer": "Zastavit měření času",
     "dragHandle": "Přetáhnout pro změnu pořadí",
+    "subtasks": "Podúkoly",
+    "addSubtask": "Přidat podúkol…",
+    "search": "Hledat úkoly…",
+    "sortDefault": "Výchozí pořadí",
+    "sortPriority": "Podle priority",
+    "sortDueDate": "Podle termínu",
+    "sortTimeSpent": "Podle stráveného času",
     "tracking": "Měření",
     "priority": "Priorita",
     "priorityNone": "Žádná",
@@ -79,7 +86,12 @@
     "cyclesBeforeLongBreak": "Cyklů před dlouhou pauzou",
     "notificationTitle": "AmirTime",
     "notificationWorkDone": "Pracovní úsek hotov! Čas na pauzu.",
-    "notificationBreakDone": "Pauza skončila! Zpět do práce."
+    "notificationBreakDone": "Pauza skončila! Zpět do práce.",
+    "startForTask": "Spustit Pomodoro pro tento úkol",
+    "currentTask": "Pracuji na",
+    "noLinkedTask": "Žádný úkol není propojen — vyberte níže nebo ze seznamu úkolů",
+    "todayTasks": "Dnešní úkoly",
+    "active": "Aktivní"
   },
   "settings": {
     "title": "Nastavení",

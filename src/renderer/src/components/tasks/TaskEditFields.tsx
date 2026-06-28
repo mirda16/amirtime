@@ -15,6 +15,7 @@ import { useDebouncedCallback } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
 import type { Task, TaskPriority, UpdateTaskInput } from '@shared/types'
 import { ColorPickerPopover } from '../common/ColorPickerPopover'
+import { SubtaskList } from './SubtaskList'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useTasksStore } from '../../stores/tasksStore'
@@ -171,6 +172,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
           allowDeselect={false}
         />
       </Group>
+      <SubtaskList taskId={task.id} />
       <Group justify="space-between" mt="md">
         <Button color="red" variant="subtle" onClick={handleDelete}>
           {t('common.delete')}
