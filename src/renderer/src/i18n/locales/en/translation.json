@@ -41,6 +41,7 @@
     "startTimer": "Start tracking time",
     "stopTimer": "Stop tracking time",
     "dragHandle": "Drag to reorder",
+    "timeSpent": "Time spent",
     "subtasks": "Subtasks",
     "addSubtask": "Add subtask…",
     "search": "Search tasks…",

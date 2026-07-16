@@ -10,6 +10,18 @@ import {
   Textarea,
   TextInput
 } from '@mantine/core'
+
+function secondsToHHMM(seconds: number): string {
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}
+
+function hhmmToSeconds(value: string): number | null {
+  const match = value.match(/^(\d+):([0-5]\d)$/)
+  if (!match) return null
+  return parseInt(match[1]) * 3600 + parseInt(match[2]) * 60
+}
 import { DateInput } from '@mantine/dates'
 import { useDebouncedCallback } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
@@ -40,6 +52,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const [estimate, setEstimate] = useState<number | ''>(task.timeEstimateMinutes ?? '')
   const [color, setColor] = useState<string | null>(task.color)
   const [priority, setPriority] = useState<TaskPriority>(task.priority)
+  const [timeSpent, setTimeSpent] = useState(secondsToHHMM(task.timeSpentSeconds))
 
   useEffect(() => {
     setTitle(task.title)
@@ -50,6 +63,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     setEstimate(task.timeEstimateMinutes ?? '')
     setColor(task.color)
     setPriority(task.priority)
+    setTimeSpent(secondsToHHMM(task.timeSpentSeconds))
   }, [task])
 
   const debouncedUpdate = useDebouncedCallback((patch: UpdateTaskInput) => {
@@ -90,6 +104,15 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const handleColorChange = (value: string | null) => {
     setColor(value)
     void updateTask(task.id, { color: value })
+  }
+
+  const handleTimeSpentBlur = () => {
+    const seconds = hhmmToSeconds(timeSpent)
+    if (seconds !== null) {
+      void updateTask(task.id, { timeSpentSeconds: seconds })
+    } else {
+      setTimeSpent(secondsToHHMM(task.timeSpentSeconds))
+    }
   }
 
   const handlePriorityChange = (value: string | null) => {
@@ -158,6 +181,14 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
           value={estimate}
           onChange={handleEstimateChange}
           min={0}
+        />
+        <TextInput
+          label={t('tasks.timeSpent')}
+          value={timeSpent}
+          onChange={(e) => setTimeSpent(e.currentTarget.value)}
+          onBlur={handleTimeSpentBlur}
+          placeholder="HH:MM"
+          ff="monospace"
         />
         <Select
           label={t('tasks.priority')}

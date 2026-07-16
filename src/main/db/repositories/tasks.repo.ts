@@ -150,7 +150,7 @@ export const tasksRepo = {
       `UPDATE tasks SET
         title = ?, description = ?, project_id = ?, color = ?, priority = ?, is_done = ?, done_at = ?,
         due_date = ?, scheduled_at = ?, scheduled_end = ?, time_estimate_minutes = ?,
-        sort_order = ?, updated_at = ?
+        time_spent_seconds = ?, sort_order = ?, updated_at = ?
        WHERE id = ?`
     ).run(
       patch.title ?? existing.title,
@@ -166,6 +166,7 @@ export const tasksRepo = {
       patch.timeEstimateMinutes !== undefined
         ? patch.timeEstimateMinutes
         : existing.time_estimate_minutes,
+      patch.timeSpentSeconds !== undefined ? patch.timeSpentSeconds : existing.time_spent_seconds,
       patch.sortOrder !== undefined ? patch.sortOrder : existing.sort_order,
       now,
       id

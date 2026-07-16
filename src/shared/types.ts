@@ -83,6 +83,7 @@ export interface UpdateTaskInput {
   scheduledAt?: string | null
   scheduledEnd?: string | null
   timeEstimateMinutes?: number | null
+  timeSpentSeconds?: number
   sortOrder?: number
   tagIds?: string[]
 }
