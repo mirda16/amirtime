@@ -4,6 +4,7 @@ import Database from 'better-sqlite3'
 import migration001 from './migrations/001_init.sql?raw'
 import migration002 from './migrations/002_task_extras.sql?raw'
 import migration003 from './migrations/003_subtasks.sql?raw'
+import migration004 from './migrations/004_kanban.sql?raw'
 
 interface Migration {
   version: number
@@ -13,7 +14,8 @@ interface Migration {
 const MIGRATIONS: Migration[] = [
   { version: 1, sql: migration001 },
   { version: 2, sql: migration002 },
-  { version: 3, sql: migration003 }
+  { version: 3, sql: migration003 },
+  { version: 4, sql: migration004 }
 ]
 
 export const CURRENT_SCHEMA_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version

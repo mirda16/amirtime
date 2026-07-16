@@ -17,6 +17,8 @@
     "pomodoro": "Pomodoro",
     "reports": "Reports",
     "settings": "Settings",
+    "today": "Today",
+    "kanban": "Kanban",
     "projects": "Projects",
     "tags": "Tags",
     "allTasks": "All tasks"
@@ -25,7 +27,7 @@
     "title": "Title",
     "description": "Description",
     "dueDate": "Due date",
-    "estimate": "Estimate (minutes)",
+    "estimate": "Estimate",
     "newTask": "New task",
     "editTask": "Edit task",
     "noTasks": "No tasks yet. Create your first one!",
@@ -110,6 +112,17 @@
     "exportSuccess": "Data exported successfully",
     "importSuccess": "Data imported successfully",
     "importError": "Failed to import data. The file may be invalid or from a newer version."
+  },
+  "kanban": {
+    "title": "Kanban",
+    "backlog": "Backlog",
+    "inProgress": "In Progress",
+    "done": "Done"
+  },
+  "today": {
+    "overdue": "Overdue",
+    "today": "Today",
+    "noTasks": "No tasks for today. Enjoy your day!"
   },
   "calendar": {
     "title": "Calendar",

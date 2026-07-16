@@ -3,25 +3,18 @@ import {
   Button,
   Group,
   MultiSelect,
-  NumberInput,
   Select,
   Stack,
   Text,
   Textarea,
   TextInput
 } from '@mantine/core'
-
-function secondsToHHMM(seconds: number): string {
-  const h = Math.floor(seconds / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-}
-
-function hhmmToSeconds(value: string): number | null {
-  const match = value.match(/^(\d+):([0-5]\d)$/)
-  if (!match) return null
-  return parseInt(match[1]) * 3600 + parseInt(match[2]) * 60
-}
+import {
+  hhmmToMinutes,
+  hhmmToSeconds,
+  minutesToHHMM,
+  secondsToHHMM
+} from '../../utils/formatDuration'
 import { DateInput } from '@mantine/dates'
 import { useDebouncedCallback } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
@@ -49,7 +42,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const [projectId, setProjectId] = useState<string | null>(task.projectId)
   const [tagIds, setTagIds] = useState<string[]>(task.tagIds)
   const [dueDate, setDueDate] = useState<string | null>(task.dueDate ?? null)
-  const [estimate, setEstimate] = useState<number | ''>(task.timeEstimateMinutes ?? '')
+  const [estimate, setEstimate] = useState(task.timeEstimateMinutes != null ? minutesToHHMM(task.timeEstimateMinutes) : '')
   const [color, setColor] = useState<string | null>(task.color)
   const [priority, setPriority] = useState<TaskPriority>(task.priority)
   const [timeSpent, setTimeSpent] = useState(secondsToHHMM(task.timeSpentSeconds))
@@ -60,7 +53,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     setProjectId(task.projectId)
     setTagIds(task.tagIds)
     setDueDate(task.dueDate ?? null)
-    setEstimate(task.timeEstimateMinutes ?? '')
+    setEstimate(task.timeEstimateMinutes != null ? minutesToHHMM(task.timeEstimateMinutes) : '')
     setColor(task.color)
     setPriority(task.priority)
     setTimeSpent(secondsToHHMM(task.timeSpentSeconds))
@@ -95,10 +88,17 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     void updateTask(task.id, { dueDate: value })
   }
 
-  const handleEstimateChange = (value: number | string) => {
-    const num = value === '' ? null : Number(value)
-    setEstimate(value === '' ? '' : Number(value))
-    void updateTask(task.id, { timeEstimateMinutes: num })
+  const handleEstimateBlur = () => {
+    if (estimate === '') {
+      void updateTask(task.id, { timeEstimateMinutes: null })
+    } else {
+      const minutes = hhmmToMinutes(estimate)
+      if (minutes !== null) {
+        void updateTask(task.id, { timeEstimateMinutes: minutes })
+      } else {
+        setEstimate(task.timeEstimateMinutes != null ? minutesToHHMM(task.timeEstimateMinutes) : '')
+      }
+    }
   }
 
   const handleColorChange = (value: string | null) => {
@@ -176,11 +176,13 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
           valueFormat="DD.MM.YYYY"
           highlightToday
         />
-        <NumberInput
+        <TextInput
           label={t('tasks.estimate')}
           value={estimate}
-          onChange={handleEstimateChange}
-          min={0}
+          onChange={(e) => setEstimate(e.currentTarget.value)}
+          onBlur={handleEstimateBlur}
+          placeholder="HH:MM"
+          ff="monospace"
         />
         <TextInput
           label={t('tasks.timeSpent')}

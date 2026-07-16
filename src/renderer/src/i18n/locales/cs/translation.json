@@ -17,6 +17,8 @@
     "pomodoro": "Pomodoro",
     "reports": "Reporty",
     "settings": "Nastavení",
+    "today": "Dnes",
+    "kanban": "Kanban",
     "projects": "Projekty",
     "tags": "Tagy",
     "allTasks": "Všechny úkoly"
@@ -25,7 +27,7 @@
     "title": "Název",
     "description": "Popis",
     "dueDate": "Termín",
-    "estimate": "Odhad (minuty)",
+    "estimate": "Odhad",
     "newTask": "Nový úkol",
     "editTask": "Upravit úkol",
     "noTasks": "Zatím žádné úkoly. Vytvořte první!",
@@ -110,6 +112,17 @@
     "exportSuccess": "Data byla úspěšně exportována",
     "importSuccess": "Data byla úspěšně importována",
     "importError": "Import dat se nezdařil. Soubor může být neplatný nebo z novější verze."
+  },
+  "kanban": {
+    "title": "Kanban",
+    "backlog": "Backlog",
+    "inProgress": "Probíhá",
+    "done": "Hotovo"
+  },
+  "today": {
+    "overdue": "Po termínu",
+    "today": "Dnes",
+    "noTasks": "Žádné úkoly na dnes. Užijte si den!"
   },
   "calendar": {
     "title": "Kalendář",

@@ -4,9 +4,11 @@ import {
   IconCalendarWeek,
   IconChecklist,
   IconClockHour4,
+  IconLayoutKanban,
   IconPlayerStop,
   IconReportAnalytics,
-  IconSettings
+  IconSettings,
+  IconSun
 } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -18,6 +20,8 @@ import { ProjectsTagsSidebar } from './ProjectsTagsSidebar'
 
 const NAV_ITEMS = [
   { path: '/tasks', labelKey: 'nav.tasks', Icon: IconChecklist },
+  { path: '/today', labelKey: 'nav.today', Icon: IconSun },
+  { path: '/kanban', labelKey: 'nav.kanban', Icon: IconLayoutKanban },
   { path: '/calendar', labelKey: 'nav.calendar', Icon: IconCalendarWeek },
   { path: '/pomodoro', labelKey: 'nav.pomodoro', Icon: IconClockHour4 },
   { path: '/reports', labelKey: 'nav.reports', Icon: IconReportAnalytics },

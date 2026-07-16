@@ -3,7 +3,6 @@ import {
   Button,
   Group,
   MultiSelect,
-  NumberInput,
   Select,
   Stack,
   Text,
@@ -13,6 +12,8 @@ import {
 import { DateInput } from '@mantine/dates'
 import { useTranslation } from 'react-i18next'
 import type { TaskPriority } from '@shared/types'
+import { hhmmToMinutes } from '../../utils/formatDuration'
+import type { KanbanStatus } from '@shared/types'
 import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
@@ -21,9 +22,10 @@ import { useTasksStore } from '../../stores/tasksStore'
 interface TaskCreateFieldsProps {
   onClose: () => void
   defaultProjectId?: string | null
+  defaultKanbanStatus?: KanbanStatus
 }
 
-export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFieldsProps) {
+export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatus }: TaskCreateFieldsProps) {
   const { t } = useTranslation()
   const projects = useProjectsStore((s) => s.projects)
   const tags = useTagsStore((s) => s.tags)
@@ -34,7 +36,7 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
   const [projectId, setProjectId] = useState<string | null>(defaultProjectId ?? null)
   const [tagIds, setTagIds] = useState<string[]>([])
   const [dueDate, setDueDate] = useState<string | null>(null)
-  const [estimate, setEstimate] = useState<number | ''>('')
+  const [estimate, setEstimate] = useState('')
   const [color, setColor] = useState<string | null>(null)
   const [priority, setPriority] = useState<TaskPriority>('none')
 
@@ -48,7 +50,8 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
       priority,
       tagIds,
       dueDate,
-      timeEstimateMinutes: estimate === '' ? null : Number(estimate)
+      timeEstimateMinutes: estimate === '' ? null : hhmmToMinutes(estimate),
+      kanbanStatus: defaultKanbanStatus
     })
     onClose()
   }
@@ -103,11 +106,12 @@ export function TaskCreateFields({ onClose, defaultProjectId }: TaskCreateFields
           valueFormat="DD.MM.YYYY"
           highlightToday
         />
-        <NumberInput
+        <TextInput
           label={t('tasks.estimate')}
           value={estimate}
-          onChange={(value) => setEstimate(value === '' ? '' : Number(value))}
-          min={0}
+          onChange={(e) => setEstimate(e.currentTarget.value)}
+          placeholder="HH:MM"
+          ff="monospace"
         />
         <Select
           label={t('tasks.priority')}

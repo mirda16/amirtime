@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import type Database from 'better-sqlite3'
 import { getDb } from '../index'
-import type { CreateTaskInput, Task, TaskFilter, TaskPriority, UpdateTaskInput } from '@shared/types'
+import type { CreateTaskInput, KanbanStatus, Task, TaskFilter, TaskPriority, UpdateTaskInput } from '@shared/types'
 import { subtasksRepo } from './subtasks.repo'
 
 interface TaskRow {
@@ -18,6 +18,7 @@ interface TaskRow {
   scheduled_end: string | null
   time_estimate_minutes: number | null
   time_spent_seconds: number
+  kanban_status: string
   sort_order: number
   created_at: string
   updated_at: string
@@ -38,6 +39,7 @@ function mapRow(row: TaskRow, tagIds: string[]): Task {
     scheduledEnd: row.scheduled_end,
     timeEstimateMinutes: row.time_estimate_minutes,
     timeSpentSeconds: row.time_spent_seconds,
+    kanbanStatus: row.kanban_status as KanbanStatus,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -111,8 +113,8 @@ export const tasksRepo = {
     db.prepare(
       `INSERT INTO tasks (
         id, title, description, project_id, color, priority, is_done,
-        due_date, time_estimate_minutes, sort_order, time_spent_seconds, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?)`
+        due_date, time_estimate_minutes, sort_order, time_spent_seconds, kanban_status, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?, ?)`
     ).run(
       id,
       input.title,
@@ -123,6 +125,7 @@ export const tasksRepo = {
       input.dueDate ?? null,
       input.timeEstimateMinutes ?? null,
       maxOrder + 1,
+      input.kanbanStatus ?? 'backlog',
       now,
       now
     )
@@ -146,11 +149,15 @@ export const tasksRepo = {
     const doneAt =
       patch.isDone !== undefined ? (patch.isDone ? now : null) : existing.done_at
 
+    let kanbanStatus = patch.kanbanStatus !== undefined ? patch.kanbanStatus : existing.kanban_status
+    if (patch.isDone === true && kanbanStatus !== 'done') kanbanStatus = 'done'
+    else if (patch.isDone === false && kanbanStatus === 'done') kanbanStatus = 'backlog'
+
     db.prepare(
       `UPDATE tasks SET
         title = ?, description = ?, project_id = ?, color = ?, priority = ?, is_done = ?, done_at = ?,
         due_date = ?, scheduled_at = ?, scheduled_end = ?, time_estimate_minutes = ?,
-        time_spent_seconds = ?, sort_order = ?, updated_at = ?
+        time_spent_seconds = ?, sort_order = ?, kanban_status = ?, updated_at = ?
        WHERE id = ?`
     ).run(
       patch.title ?? existing.title,
@@ -168,6 +175,7 @@ export const tasksRepo = {
         : existing.time_estimate_minutes,
       patch.timeSpentSeconds !== undefined ? patch.timeSpentSeconds : existing.time_spent_seconds,
       patch.sortOrder !== undefined ? patch.sortOrder : existing.sort_order,
+      kanbanStatus,
       now,
       id
     )

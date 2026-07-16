@@ -1,6 +1,6 @@
 import { Modal } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
-import type { Task } from '@shared/types'
+import type { KanbanStatus, Task } from '@shared/types'
 import { TaskCreateFields } from './TaskCreateFields'
 import { TaskEditFields } from './TaskEditFields'
 
@@ -9,9 +9,10 @@ interface TaskFormModalProps {
   onClose: () => void
   task: Task | null
   defaultProjectId?: string | null
+  defaultKanbanStatus?: KanbanStatus
 }
 
-export function TaskFormModal({ opened, onClose, task, defaultProjectId }: TaskFormModalProps) {
+export function TaskFormModal({ opened, onClose, task, defaultProjectId, defaultKanbanStatus }: TaskFormModalProps) {
   const { t } = useTranslation()
 
   return (
@@ -24,7 +25,7 @@ export function TaskFormModal({ opened, onClose, task, defaultProjectId }: TaskF
       {task ? (
         <TaskEditFields task={task} onClose={onClose} />
       ) : (
-        <TaskCreateFields onClose={onClose} defaultProjectId={defaultProjectId} />
+        <TaskCreateFields onClose={onClose} defaultProjectId={defaultProjectId} defaultKanbanStatus={defaultKanbanStatus} />
       )}
     </Modal>
   )

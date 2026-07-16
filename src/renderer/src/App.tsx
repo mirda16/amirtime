@@ -8,6 +8,8 @@ import PomodoroPage from './routes/PomodoroPage'
 import ReportsPage from './routes/ReportsPage'
 import SettingsPage from './routes/SettingsPage'
 import TasksPage from './routes/TasksPage'
+import KanbanPage from './routes/KanbanPage'
+import TodayPage from './routes/TodayPage'
 import { useProjectsStore } from './stores/projectsStore'
 import { useSettingsStore } from './stores/settingsStore'
 import { useTagsStore } from './stores/tagsStore'
@@ -54,6 +56,8 @@ function App() {
           <Route element={<AppShellLayout />}>
             <Route index element={<Navigate to="/tasks" replace />} />
             <Route path="/tasks" element={<TasksPage />} />
+            <Route path="/today" element={<TodayPage />} />
+            <Route path="/kanban" element={<KanbanPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/pomodoro" element={<PomodoroPage />} />
             <Route path="/reports" element={<ReportsPage />} />

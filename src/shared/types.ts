@@ -17,6 +17,7 @@ export interface Tag {
 }
 
 export type TaskPriority = 'none' | 'low' | 'medium' | 'high'
+export type KanbanStatus = 'backlog' | 'in_progress' | 'done'
 
 export interface Task {
   id: string
@@ -32,6 +33,7 @@ export interface Task {
   scheduledEnd: string | null
   timeEstimateMinutes: number | null
   timeSpentSeconds: number
+  kanbanStatus: KanbanStatus
   sortOrder: number
   createdAt: string
   updatedAt: string
@@ -67,6 +69,7 @@ export interface CreateTaskInput {
   projectId?: string | null
   color?: string | null
   priority?: TaskPriority
+  kanbanStatus?: KanbanStatus
   dueDate?: string | null
   timeEstimateMinutes?: number | null
   tagIds?: string[]
@@ -79,6 +82,7 @@ export interface UpdateTaskInput {
   color?: string | null
   priority?: TaskPriority
   isDone?: boolean
+  kanbanStatus?: KanbanStatus
   dueDate?: string | null
   scheduledAt?: string | null
   scheduledEnd?: string | null
