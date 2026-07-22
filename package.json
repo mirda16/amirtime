@@ -1,6 +1,6 @@
 {
   "name": "amirtime",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Personal task and time management app",
   "main": "./out/main/index.js",
   "author": "Mira <mirda16@gmail.com>",

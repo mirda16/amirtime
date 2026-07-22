@@ -153,6 +153,35 @@ export const tasksRepo = {
     if (patch.isDone === true && kanbanStatus !== 'done') kanbanStatus = 'done'
     else if (patch.isDone === false && kanbanStatus === 'done') kanbanStatus = 'backlog'
 
+    // Pre-calculate actual time spent and what to do with time entries
+    let actualTimeSpentSeconds = existing.time_spent_seconds
+    let manualEntryAction: { type: 'insert'; delta: number } | { type: 'update'; id: string; newDuration: number } | { type: 'delete'; id: string } | null = null
+
+    if (patch.timeSpentSeconds !== undefined) {
+      const delta = patch.timeSpentSeconds - existing.time_spent_seconds
+      if (delta > 0) {
+        actualTimeSpentSeconds = patch.timeSpentSeconds
+        manualEntryAction = { type: 'insert', delta }
+      } else if (delta < 0) {
+        const lastManual = db
+          .prepare(
+            `SELECT id, duration_seconds FROM time_entries
+             WHERE task_id = ? AND type = 'manual'
+             ORDER BY started_at DESC LIMIT 1`
+          )
+          .get(id) as { id: string; duration_seconds: number } | undefined
+
+        if (lastManual) {
+          const reducible = Math.min(-delta, lastManual.duration_seconds)
+          actualTimeSpentSeconds = existing.time_spent_seconds - reducible
+          const newDuration = lastManual.duration_seconds - reducible
+          manualEntryAction = newDuration === 0
+            ? { type: 'delete', id: lastManual.id }
+            : { type: 'update', id: lastManual.id, newDuration }
+        }
+      }
+    }
+
     db.prepare(
       `UPDATE tasks SET
         title = ?, description = ?, project_id = ?, color = ?, priority = ?, is_done = ?, done_at = ?,
@@ -173,12 +202,26 @@ export const tasksRepo = {
       patch.timeEstimateMinutes !== undefined
         ? patch.timeEstimateMinutes
         : existing.time_estimate_minutes,
-      patch.timeSpentSeconds !== undefined ? patch.timeSpentSeconds : existing.time_spent_seconds,
+      actualTimeSpentSeconds,
       patch.sortOrder !== undefined ? patch.sortOrder : existing.sort_order,
       kanbanStatus,
       now,
       id
     )
+
+    if (manualEntryAction) {
+      if (manualEntryAction.type === 'insert') {
+        db.prepare(
+          `INSERT INTO time_entries (id, task_id, started_at, ended_at, duration_seconds, type, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, 'manual', ?, ?)`
+        ).run(randomUUID(), id, now, now, manualEntryAction.delta, now, now)
+      } else if (manualEntryAction.type === 'update') {
+        db.prepare('UPDATE time_entries SET duration_seconds = ?, updated_at = ? WHERE id = ?')
+          .run(manualEntryAction.newDuration, now, manualEntryAction.id)
+      } else {
+        db.prepare('DELETE FROM time_entries WHERE id = ?').run(manualEntryAction.id)
+      }
+    }
 
     if (patch.tagIds !== undefined) {
       setTagsInternal(db, id, patch.tagIds)
