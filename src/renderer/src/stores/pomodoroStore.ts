@@ -28,6 +28,7 @@ interface PomodoroState {
   cyclesCompleted: number
   intervalId: ReturnType<typeof setInterval> | null
   linkedTaskId: string | null
+  phaseStartedAt: number | null
   start: () => void
   pause: () => void
   reset: () => void
@@ -38,10 +39,16 @@ interface PomodoroState {
 export const usePomodoroStore = create<PomodoroState>((set, get) => {
   const tick = (): void => {
     const config = useSettingsStore.getState().settings.pomodoro
-    const { remainingSeconds, phase, cyclesCompleted } = get()
+    const { phaseStartedAt, phase, cyclesCompleted } = get()
 
-    if (remainingSeconds > 1) {
-      set({ remainingSeconds: remainingSeconds - 1 })
+    if (!phaseStartedAt) return
+
+    const totalDuration = phaseDuration(phase, config)
+    const elapsed = Math.floor((Date.now() - phaseStartedAt) / 1000)
+    const remaining = Math.max(0, totalDuration - elapsed)
+
+    if (remaining > 0) {
+      set({ remainingSeconds: remaining })
       return
     }
 
@@ -63,11 +70,11 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
       body: notificationBody
     })
 
-    // Time tracking keeps running through phase changes (breaks count too)
     set({
       phase: nextPhase,
       remainingSeconds: phaseDuration(nextPhase, config),
-      cyclesCompleted: nextCycles
+      cyclesCompleted: nextCycles,
+      phaseStartedAt: Date.now()
     })
   }
 
@@ -78,23 +85,30 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
     cyclesCompleted: 0,
     intervalId: null,
     linkedTaskId: null,
+    phaseStartedAt: null,
 
     start: () => {
       if (get().isRunning) return
-      const { linkedTaskId } = get()
+      const { linkedTaskId, remainingSeconds, phase } = get()
+      const config = useSettingsStore.getState().settings.pomodoro
+
       // Resume time tracking if a task is linked but not currently tracked
       if (linkedTaskId && !useTimerStore.getState().activeEntry) {
         void useTimerStore.getState().start(linkedTaskId)
       }
+
+      // Calculate phaseStartedAt adjusted for already-elapsed time (resume from pause)
+      const totalDuration = phaseDuration(phase, config)
+      const phaseStartedAt = Date.now() - (totalDuration - remainingSeconds) * 1000
+
       const intervalId = setInterval(tick, 1000)
-      set({ isRunning: true, intervalId })
+      set({ isRunning: true, intervalId, phaseStartedAt })
     },
 
     pause: () => {
       const { intervalId, linkedTaskId } = get()
       if (intervalId) clearInterval(intervalId)
-      set({ isRunning: false, intervalId: null })
-      // Stop time tracking on pause
+      set({ isRunning: false, intervalId: null, phaseStartedAt: null })
       if (linkedTaskId && isTrackingTask(linkedTaskId)) {
         void useTimerStore.getState().stop()
       }
@@ -103,7 +117,6 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
     reset: () => {
       const { intervalId, linkedTaskId } = get()
       if (intervalId) clearInterval(intervalId)
-      // Stop time tracking on reset
       if (linkedTaskId && isTrackingTask(linkedTaskId)) {
         void useTimerStore.getState().stop()
       }
@@ -114,28 +127,31 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
         isRunning: false,
         cyclesCompleted: 0,
         intervalId: null,
-        linkedTaskId: null
+        linkedTaskId: null,
+        phaseStartedAt: null
       })
     },
 
     startForTask: (taskId: string) => {
+      const { phase } = get()
+      const config = useSettingsStore.getState().settings.pomodoro
       set({ linkedTaskId: taskId })
-      // Start time tracking (timerStore.start handles stopping any previous entry)
       void useTimerStore.getState().start(taskId)
       if (!get().isRunning) {
+        const totalDuration = phaseDuration(phase, config)
+        const { remainingSeconds } = get()
+        const phaseStartedAt = Date.now() - (totalDuration - remainingSeconds) * 1000
         const intervalId = setInterval(tick, 1000)
-        set({ isRunning: true, intervalId })
+        set({ isRunning: true, intervalId, phaseStartedAt })
       }
     },
 
     linkTask: (taskId: string | null) => {
       const { linkedTaskId: prev, isRunning } = get()
-      // Stop tracking the previous task
       if (prev && isTrackingTask(prev)) {
         void useTimerStore.getState().stop()
       }
       set({ linkedTaskId: taskId })
-      // If pomodoro is running, immediately start tracking the new task
       if (taskId && isRunning) {
         void useTimerStore.getState().start(taskId)
       }
