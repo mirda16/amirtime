@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Group, Modal, NumberInput, Select, SegmentedControl, Stack, Text, Title } from '@mantine/core'
+import { useEffect, useState } from 'react'
+import { Button, Code, Group, Modal, NumberInput, Select, SegmentedControl, Stack, Text, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import type { AppSettings } from '@shared/types'
@@ -25,6 +25,12 @@ export default function SettingsPage() {
   const [importModalOpen, setImportModalOpen] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
+  const [syncPath, setSyncPath] = useState<string | null>(null)
+  const [isSyncing, setIsSyncing] = useState(false)
+
+  useEffect(() => {
+    void window.api.sync.getPath().then(setSyncPath)
+  }, [])
 
   const handleExport = async () => {
     setIsExporting(true)
@@ -135,6 +141,51 @@ export default function SettingsPage() {
           {t('settings.importData')}
         </Button>
       </Group>
+
+      <Title order={4}>{t('settings.syncSection')}</Title>
+      <Text size="sm" c="dimmed">{t('settings.syncDescription')}</Text>
+      {syncPath ? (
+        <Stack gap="xs">
+          <Code block style={{ wordBreak: 'break-all' }}>{syncPath}</Code>
+          <Group>
+            <Button
+              variant="light"
+              loading={isSyncing}
+              onClick={async () => {
+                setIsSyncing(true)
+                await window.api.sync.exportNow()
+                setIsSyncing(false)
+                notifications.show({ message: t('settings.syncExportDone'), color: 'green' })
+              }}
+            >
+              {t('settings.syncNow')}
+            </Button>
+            <Button
+              variant="subtle"
+              color="red"
+              onClick={async () => {
+                await window.api.sync.clearPath()
+                setSyncPath(null)
+              }}
+            >
+              {t('settings.syncDisable')}
+            </Button>
+          </Group>
+        </Stack>
+      ) : (
+        <Button
+          variant="light"
+          onClick={async () => {
+            const path = await window.api.sync.selectPath()
+            if (path) {
+              setSyncPath(path)
+              notifications.show({ message: t('settings.syncEnabled'), color: 'green' })
+            }
+          }}
+        >
+          {t('settings.syncEnable')}
+        </Button>
+      )}
 
       <Modal
         opened={importModalOpen}

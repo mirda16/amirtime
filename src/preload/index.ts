@@ -86,6 +86,17 @@ const api = {
       ipcRenderer.invoke(IpcChannels.subtasksUpdate, subtaskId, taskId, patch),
     delete: (subtaskId: string, taskId: string): Promise<Task> =>
       ipcRenderer.invoke(IpcChannels.subtasksDelete, subtaskId, taskId)
+  },
+  sync: {
+    getPath: (): Promise<string | null> => ipcRenderer.invoke(IpcChannels.syncGetPath),
+    selectPath: (): Promise<string | null> => ipcRenderer.invoke(IpcChannels.syncSelectPath),
+    clearPath: (): Promise<void> => ipcRenderer.invoke(IpcChannels.syncClearPath),
+    exportNow: (): Promise<void> => ipcRenderer.invoke(IpcChannels.syncExportNow),
+    importNow: (): Promise<boolean> => ipcRenderer.invoke(IpcChannels.syncImportNow),
+    onDataChanged: (callback: () => void): (() => void) => {
+      ipcRenderer.on(IpcChannels.syncDataChanged, callback)
+      return () => ipcRenderer.removeListener(IpcChannels.syncDataChanged, callback)
+    }
   }
 }
 

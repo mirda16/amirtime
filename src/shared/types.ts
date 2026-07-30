@@ -178,6 +178,7 @@ export interface ExportTables {
   tags: Record<string, unknown>[]
   tasks: Record<string, unknown>[]
   taskTags: Record<string, unknown>[]
+  subtasks: Record<string, unknown>[]
   timeEntries: Record<string, unknown>[]
   settings: Record<string, unknown>[]
 }

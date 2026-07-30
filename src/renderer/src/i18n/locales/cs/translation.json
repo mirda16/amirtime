@@ -111,7 +111,14 @@
     "importWarning": "Import nahradí všechny stávající projekty, štítky, úkoly a časové záznamy obsahem vybraného souboru. Tuto akci nelze vrátit.",
     "exportSuccess": "Data byla úspěšně exportována",
     "importSuccess": "Data byla úspěšně importována",
-    "importError": "Import dat se nezdařil. Soubor může být neplatný nebo z novější verze."
+    "importError": "Import dat se nezdařil. Soubor může být neplatný nebo z novější verze.",
+    "syncSection": "Synchronizace",
+    "syncDescription": "Zvol umístění souboru, který synchronizuje tvůj nástroj (Syncthing, Nextcloud, Dropbox…). AmirTime bude soubor automaticky číst a zapisovat.",
+    "syncEnable": "Zvolit sync soubor…",
+    "syncDisable": "Vypnout synchronizaci",
+    "syncNow": "Synchronizovat nyní",
+    "syncEnabled": "Synchronizace zapnuta — počáteční export dokončen",
+    "syncExportDone": "Sync soubor aktualizován"
   },
   "kanban": {
     "title": "Kanban",

@@ -111,7 +111,14 @@
     "importWarning": "Importing will replace all existing projects, tags, tasks and time entries with the contents of the chosen file. This cannot be undone.",
     "exportSuccess": "Data exported successfully",
     "importSuccess": "Data imported successfully",
-    "importError": "Failed to import data. The file may be invalid or from a newer version."
+    "importError": "Failed to import data. The file may be invalid or from a newer version.",
+    "syncSection": "Sync",
+    "syncDescription": "Choose a file location that your sync tool (Syncthing, Nextcloud, Dropbox…) keeps in sync. AmirTime will read and write this file automatically.",
+    "syncEnable": "Choose sync file…",
+    "syncDisable": "Disable sync",
+    "syncNow": "Sync now",
+    "syncEnabled": "Sync enabled — initial export done",
+    "syncExportDone": "Sync file updated"
   },
   "kanban": {
     "title": "Kanban",

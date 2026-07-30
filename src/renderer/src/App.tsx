@@ -42,6 +42,14 @@ function AppData() {
     void initTimer()
   }, [loadSettings, loadProjects, loadTags, loadTasks, initTimer])
 
+  useEffect(() => {
+    return window.api.sync.onDataChanged(() => {
+      void loadProjects()
+      void loadTags()
+      void loadTasks()
+    })
+  }, [loadProjects, loadTags, loadTasks])
+
   return null
 }
 

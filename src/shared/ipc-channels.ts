@@ -34,5 +34,12 @@ export const IpcChannels = {
   settingsGetAll: 'settings:getAll',
   settingsSet: 'settings:set',
 
-  notificationsShow: 'notifications:show'
+  notificationsShow: 'notifications:show',
+
+  syncGetPath: 'sync:getPath',
+  syncSelectPath: 'sync:selectPath',
+  syncClearPath: 'sync:clearPath',
+  syncExportNow: 'sync:exportNow',
+  syncImportNow: 'sync:importNow',
+  syncDataChanged: 'sync:dataChanged'
 } as const
