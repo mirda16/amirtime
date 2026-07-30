@@ -104,6 +104,11 @@
     "dark": "Tmavé",
     "auto": "Automaticky",
     "pomodoroSettings": "Pomodoro",
+    "timerSection": "Časovač",
+    "timerReminder": "Připomínka zapomenutého časovače",
+    "timerReminderDesc": "Zobrazí upozornění pokud časovač běží déle než tato hodnota. Po dalších 5 minutách se automaticky zastaví.",
+    "timerReminderOff": "Vypnuto",
+    "hours": "hod",
     "dataSection": "Data",
     "dataDescription": "Exportujte všechna svá data do souboru pro zálohu, nebo je později importujte zpět.",
     "exportData": "Exportovat data",
@@ -125,6 +130,10 @@
     "backlog": "Backlog",
     "inProgress": "Probíhá",
     "done": "Hotovo"
+  },
+  "timer": {
+    "reminderTitle": "Časovač stále běží",
+    "reminderBody": "Časovač běží již {{time}}. Stále pracuješ? Za 5 minut se automaticky zastaví — klikni pro zrušení."
   },
   "today": {
     "overdue": "Po termínu",

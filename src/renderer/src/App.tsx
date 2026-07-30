@@ -50,6 +50,15 @@ function AppData() {
     })
   }, [loadProjects, loadTags, loadTasks])
 
+  useEffect(() => {
+    const handleFocus = () => {
+      const { reminderSentAt, dismissReminder } = useTimerStore.getState()
+      if (reminderSentAt) dismissReminder()
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [])
+
   return null
 }
 

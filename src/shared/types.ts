@@ -171,6 +171,7 @@ export interface AppSettings {
   language: string
   theme: 'light' | 'dark' | 'auto'
   pomodoro: PomodoroSettings
+  timerReminderHours: number
 }
 
 export interface ExportTables {
@@ -208,5 +209,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
     shortBreakMinutes: 5,
     longBreakMinutes: 15,
     cyclesBeforeLongBreak: 4
-  }
+  },
+  timerReminderHours: 2
 }

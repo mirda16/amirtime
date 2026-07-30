@@ -104,6 +104,11 @@
     "dark": "Dark",
     "auto": "Auto",
     "pomodoroSettings": "Pomodoro",
+    "timerSection": "Timer",
+    "timerReminder": "Forgotten timer reminder",
+    "timerReminderDesc": "Show a notification if the timer runs longer than this. Auto-stops after 5 more minutes.",
+    "timerReminderOff": "Off",
+    "hours": "hours",
     "dataSection": "Data",
     "dataDescription": "Export all your data to a file for backup, or import it back later.",
     "exportData": "Export data",
@@ -125,6 +130,10 @@
     "backlog": "Backlog",
     "inProgress": "In Progress",
     "done": "Done"
+  },
+  "timer": {
+    "reminderTitle": "Timer still running",
+    "reminderBody": "Timer has been running for {{time}}. Still working? It will auto-stop in 5 minutes — click to cancel."
   },
   "today": {
     "overdue": "Overdue",

@@ -129,6 +129,25 @@ export default function SettingsPage() {
         }
       />
 
+      <Title order={4}>{t('settings.timerSection')}</Title>
+      <Select
+        label={t('settings.timerReminder')}
+        description={t('settings.timerReminderDesc')}
+        value={String(settings.timerReminderHours)}
+        onChange={(v) => {
+          const hours = Number(v ?? '0')
+          void window.api.settings.set('timerReminderHours', hours)
+        }}
+        data={[
+          { value: '0', label: t('settings.timerReminderOff') },
+          { value: '1', label: '1 ' + t('settings.hours') },
+          { value: '2', label: '2 ' + t('settings.hours') },
+          { value: '4', label: '4 ' + t('settings.hours') },
+          { value: '8', label: '8 ' + t('settings.hours') }
+        ]}
+        allowDeselect={false}
+      />
+
       <Title order={4}>{t('settings.dataSection')}</Title>
       <Text size="sm" c="dimmed">
         {t('settings.dataDescription')}
