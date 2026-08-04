@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Code, Group, Modal, NumberInput, Select, SegmentedControl, Stack, Text, Title } from '@mantine/core'
+import { Button, Chip, Code, Group, Modal, NumberInput, Select, SegmentedControl, SimpleGrid, Stack, Text, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import type { AppSettings } from '@shared/types'
@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const setLanguage = useSettingsStore((s) => s.setLanguage)
   const setTheme = useSettingsStore((s) => s.setTheme)
   const setPomodoroSettings = useSettingsStore((s) => s.setPomodoroSettings)
+  const updateSetting = useSettingsStore((s) => s.updateSetting)
   const loadSettings = useSettingsStore((s) => s.loadSettings)
   const loadProjects = useProjectsStore((s) => s.loadProjects)
   const loadTags = useTagsStore((s) => s.loadTags)
@@ -134,10 +135,7 @@ export default function SettingsPage() {
         label={t('settings.timerReminder')}
         description={t('settings.timerReminderDesc')}
         value={String(settings.timerReminderHours)}
-        onChange={(v) => {
-          const hours = Number(v ?? '0')
-          void window.api.settings.set('timerReminderHours', hours)
-        }}
+        onChange={(v) => void updateSetting('timerReminderHours', Number(v ?? '0'))}
         data={[
           { value: '0', label: t('settings.timerReminderOff') },
           { value: '1', label: '1 ' + t('settings.hours') },
@@ -147,6 +145,61 @@ export default function SettingsPage() {
         ]}
         allowDeselect={false}
       />
+
+      <Title order={4}>{t('settings.inactivitySection')}</Title>
+      <Select
+        label={t('settings.inactivityReminder')}
+        description={t('settings.inactivityReminderDesc')}
+        value={String(settings.inactivityReminderMinutes)}
+        onChange={(v) => void updateSetting('inactivityReminderMinutes', Number(v ?? '0'))}
+        data={[
+          { value: '0', label: t('settings.timerReminderOff') },
+          { value: '5', label: '5 ' + t('settings.minutes') },
+          { value: '10', label: '10 ' + t('settings.minutes') },
+          { value: '15', label: '15 ' + t('settings.minutes') },
+          { value: '20', label: '20 ' + t('settings.minutes') },
+          { value: '30', label: '30 ' + t('settings.minutes') }
+        ]}
+        allowDeselect={false}
+      />
+      <div>
+        <Text size="sm" fw={500} mb={4}>{t('settings.workdayDays')}</Text>
+        <Chip.Group
+          multiple
+          value={settings.workdayDays.map(String)}
+          onChange={(v) => void updateSetting('workdayDays', v.map(Number))}
+        >
+          <Group gap="xs">
+            {[1, 2, 3, 4, 5, 6, 0].map((day) => (
+              <Chip key={day} value={String(day)} size="sm">
+                {t(`settings.day${day}`)}
+              </Chip>
+            ))}
+          </Group>
+        </Chip.Group>
+      </div>
+      <SimpleGrid cols={2}>
+        <Select
+          label={t('settings.workdayStart')}
+          value={settings.workdayStart}
+          onChange={(v) => void updateSetting('workdayStart', v ?? '09:00')}
+          data={Array.from({ length: 17 }, (_, i) => {
+            const h = String(i + 5).padStart(2, '0')
+            return { value: `${h}:00`, label: `${h}:00` }
+          })}
+          allowDeselect={false}
+        />
+        <Select
+          label={t('settings.workdayEnd')}
+          value={settings.workdayEnd}
+          onChange={(v) => void updateSetting('workdayEnd', v ?? '17:00')}
+          data={Array.from({ length: 17 }, (_, i) => {
+            const h = String(i + 6).padStart(2, '0')
+            return { value: `${h}:00`, label: `${h}:00` }
+          })}
+          allowDeselect={false}
+        />
+      </SimpleGrid>
 
       <Title order={4}>{t('settings.dataSection')}</Title>
       <Text size="sm" c="dimmed">

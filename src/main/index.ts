@@ -2,6 +2,7 @@ import path from 'node:path'
 import { app, BrowserWindow, shell } from 'electron'
 import { initDb } from './db'
 import { registerIpcHandlers } from './ipc'
+import { inactivityService } from './inactivity/inactivityService'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -34,6 +35,7 @@ function createWindow(): void {
 app.whenReady().then(() => {
   initDb()
   registerIpcHandlers()
+  inactivityService.start()
 
   createWindow()
 

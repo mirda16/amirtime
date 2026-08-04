@@ -9,6 +9,7 @@ interface SettingsState {
   setLanguage: (language: string) => Promise<void>
   setTheme: (theme: AppSettings['theme']) => Promise<void>
   setPomodoroSettings: (pomodoro: PomodoroSettings) => Promise<void>
+  updateSetting: <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => Promise<void>
 }
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
@@ -35,5 +36,10 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   setPomodoroSettings: async (pomodoro) => {
     set({ settings: { ...get().settings, pomodoro } })
     await window.api.settings.set('pomodoro', pomodoro)
+  },
+
+  updateSetting: async (key, value) => {
+    set({ settings: { ...get().settings, [key]: value } })
+    await window.api.settings.set(key, value)
   }
 }))
