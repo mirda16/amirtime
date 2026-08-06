@@ -38,6 +38,7 @@ export const IpcChannels = {
 
   syncGetPath: 'sync:getPath',
   syncSelectPath: 'sync:selectPath',
+  syncConnectPath: 'sync:connectPath',
   syncClearPath: 'sync:clearPath',
   syncExportNow: 'sync:exportNow',
   syncImportNow: 'sync:importNow',

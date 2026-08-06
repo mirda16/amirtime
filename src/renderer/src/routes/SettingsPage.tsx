@@ -245,18 +245,33 @@ export default function SettingsPage() {
           </Group>
         </Stack>
       ) : (
-        <Button
-          variant="light"
-          onClick={async () => {
-            const path = await window.api.sync.selectPath()
-            if (path) {
-              setSyncPath(path)
-              notifications.show({ message: t('settings.syncEnabled'), color: 'green' })
-            }
-          }}
-        >
-          {t('settings.syncEnable')}
-        </Button>
+        <Stack gap="xs">
+          <Button
+            variant="light"
+            onClick={async () => {
+              const p = await window.api.sync.selectPath()
+              if (p) {
+                setSyncPath(p)
+                notifications.show({ message: t('settings.syncCreated'), color: 'green' })
+              }
+            }}
+          >
+            {t('settings.syncCreate')}
+          </Button>
+          <Button
+            variant="default"
+            onClick={async () => {
+              const p = await window.api.sync.connectPath()
+              if (p) {
+                setSyncPath(p)
+                notifications.show({ message: t('settings.syncConnected'), color: 'blue' })
+              }
+            }}
+          >
+            {t('settings.syncConnect')}
+          </Button>
+          <Text size="xs" c="dimmed">{t('settings.syncHint')}</Text>
+        </Stack>
       )}
 
       <Modal

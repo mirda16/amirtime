@@ -133,10 +133,13 @@
     "importError": "Failed to import data. The file may be invalid or from a newer version.",
     "syncSection": "Sync",
     "syncDescription": "Choose a file location that your sync tool (Syncthing, Nextcloud, Dropbox…) keeps in sync. AmirTime will read and write this file automatically.",
-    "syncEnable": "Choose sync file…",
+    "syncCreate": "Create new sync file…",
+    "syncConnect": "Connect to existing sync file…",
+    "syncHint": "First device: create a sync file. Other devices: connect to the file already created.",
     "syncDisable": "Disable sync",
     "syncNow": "Sync now",
-    "syncEnabled": "Sync enabled — initial export done",
+    "syncCreated": "Sync file created — data exported",
+    "syncConnected": "Connected — data merged from sync file",
     "syncExportDone": "Sync file updated"
   },
   "kanban": {

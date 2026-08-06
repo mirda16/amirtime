@@ -40,6 +40,12 @@ class SyncService {
       if (config.filePath) {
         this.filePath = config.filePath
         this.startWatcher()
+        // Import on startup so changes from other devices made while this app was
+        // closed are picked up immediately (mergeImport uses updated_at, so it is
+        // safe even when our local data is already newer).
+        if (existsSync(this.filePath)) {
+          this.importNow()
+        }
       }
     } catch {
       // no config yet
@@ -54,13 +60,24 @@ class SyncService {
     return this.filePath
   }
 
+  /**
+   * Set sync path and decide the initial action:
+   *  - file already exists → merge-import from it (connect to another device's data)
+   *  - file does not exist → export our data to create it (first-time setup)
+   */
   setPath(filePath: string | null): void {
     this.stopWatcher()
     this.filePath = filePath
     this.saveConfig()
     if (filePath) {
       this.startWatcher()
-      this.exportNow()
+      if (existsSync(filePath)) {
+        // Connect to an existing sync file — import first, don't overwrite
+        this.importNow()
+      } else {
+        // New sync file — export our data to initialise it
+        this.exportNow()
+      }
     }
   }
 

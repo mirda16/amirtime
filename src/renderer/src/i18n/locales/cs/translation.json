@@ -133,10 +133,13 @@
     "importError": "Import dat se nezdařil. Soubor může být neplatný nebo z novější verze.",
     "syncSection": "Synchronizace",
     "syncDescription": "Zvol umístění souboru, který synchronizuje tvůj nástroj (Syncthing, Nextcloud, Dropbox…). AmirTime bude soubor automaticky číst a zapisovat.",
-    "syncEnable": "Zvolit sync soubor…",
+    "syncCreate": "Vytvořit nový sync soubor…",
+    "syncConnect": "Připojit k existujícímu sync souboru…",
+    "syncHint": "První zařízení: vytvoř sync soubor. Ostatní zařízení: připoj se k již vytvořenému souboru.",
     "syncDisable": "Vypnout synchronizaci",
     "syncNow": "Synchronizovat nyní",
-    "syncEnabled": "Synchronizace zapnuta — počáteční export dokončen",
+    "syncCreated": "Sync soubor vytvořen — data exportována",
+    "syncConnected": "Připojeno — data sloučena ze sync souboru",
     "syncExportDone": "Sync soubor aktualizován"
   },
   "kanban": {

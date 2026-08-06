@@ -89,7 +89,10 @@ const api = {
   },
   sync: {
     getPath: (): Promise<string | null> => ipcRenderer.invoke(IpcChannels.syncGetPath),
+    /** Create a new sync file at a user-chosen location and export local data into it. */
     selectPath: (): Promise<string | null> => ipcRenderer.invoke(IpcChannels.syncSelectPath),
+    /** Connect to an existing sync file from another device and merge-import its data. */
+    connectPath: (): Promise<string | null> => ipcRenderer.invoke(IpcChannels.syncConnectPath),
     clearPath: (): Promise<void> => ipcRenderer.invoke(IpcChannels.syncClearPath),
     exportNow: (): Promise<void> => ipcRenderer.invoke(IpcChannels.syncExportNow),
     importNow: (): Promise<boolean> => ipcRenderer.invoke(IpcChannels.syncImportNow),
