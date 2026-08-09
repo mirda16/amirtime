@@ -19,6 +19,7 @@
     "settings": "Settings",
     "today": "Today",
     "kanban": "Kanban",
+    "table": "Table",
     "archive": "Archive",
     "projects": "Projects",
     "tags": "Tags",
@@ -146,6 +147,14 @@
     "syncCreated": "Sync file created — data exported",
     "syncConnected": "Connected — data merged from sync file",
     "syncExportDone": "Sync file updated"
+  },
+  "table": {
+    "title": "Table",
+    "status": "Status",
+    "statusAll": "All",
+    "statusActive": "Active",
+    "statusDone": "Done",
+    "rows": "tasks"
   },
   "archive": {
     "title": "Archive",

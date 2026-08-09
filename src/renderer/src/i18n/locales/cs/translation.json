@@ -19,6 +19,7 @@
     "settings": "Nastavení",
     "today": "Dnes",
     "kanban": "Kanban",
+    "table": "Tabulka",
     "archive": "Archiv",
     "projects": "Projekty",
     "tags": "Tagy",
@@ -146,6 +147,14 @@
     "syncCreated": "Sync soubor vytvořen — data exportována",
     "syncConnected": "Připojeno — data sloučena ze sync souboru",
     "syncExportDone": "Sync soubor aktualizován"
+  },
+  "table": {
+    "title": "Tabulka",
+    "status": "Stav",
+    "statusAll": "Vše",
+    "statusActive": "Aktivní",
+    "statusDone": "Hotové",
+    "rows": "úkolů"
   },
   "archive": {
     "title": "Archiv",

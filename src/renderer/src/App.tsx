@@ -11,6 +11,7 @@ import TasksPage from './routes/TasksPage'
 import KanbanPage from './routes/KanbanPage'
 import TodayPage from './routes/TodayPage'
 import ArchivePage from './routes/ArchivePage'
+import TablePage from './routes/TablePage'
 import { useProjectsStore } from './stores/projectsStore'
 import { useSettingsStore } from './stores/settingsStore'
 import { useTagsStore } from './stores/tagsStore'
@@ -81,6 +82,7 @@ function App() {
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/archive" element={<ArchivePage />} />
+            <Route path="/table" element={<TablePage />} />
           </Route>
         </Routes>
       </HashRouter>
