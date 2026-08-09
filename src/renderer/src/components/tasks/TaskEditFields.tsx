@@ -10,7 +10,7 @@ import {
   TextInput
 } from '@mantine/core'
 import {
-  hhmmToMinutes,
+  parseTimeInput,
   hhmmToSeconds,
   minutesToHHMM,
   secondsToHHMM
@@ -89,13 +89,15 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   }
 
   const handleEstimateBlur = () => {
-    if (estimate === '') {
+    if (estimate.trim() === '') {
       void updateTask(task.id, { timeEstimateMinutes: null })
     } else {
-      const minutes = hhmmToMinutes(estimate)
-      if (minutes !== null) {
+      const minutes = parseTimeInput(estimate)
+      if (minutes !== null && minutes > 0) {
+        setEstimate(minutesToHHMM(minutes))   // normalise display to HH:MM
         void updateTask(task.id, { timeEstimateMinutes: minutes })
       } else {
+        // revert to last saved value
         setEstimate(task.timeEstimateMinutes != null ? minutesToHHMM(task.timeEstimateMinutes) : '')
       }
     }

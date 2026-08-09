@@ -35,7 +35,7 @@ import { useTagsStore } from '../stores/tagsStore'
 import { useTasksStore } from '../stores/tasksStore'
 import { useTimerStore } from '../stores/timerStore'
 import { useUiFilterStore } from '../stores/uiFilterStore'
-import { formatDuration, hhmmToMinutes, minutesToHHMM } from '../utils/formatDuration'
+import { formatDuration, minutesToHHMM, parseTimeInput } from '../utils/formatDuration'
 import { PRIORITY_COLORS, PRIORITY_ORDER } from '../utils/priority'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -127,8 +127,17 @@ export default function TablePage() {
   }
 
   const saveEstimate = (taskId: string, value: string) => {
-    const minutes = hhmmToMinutes(value.trim())
-    void save(taskId, { timeEstimateMinutes: minutes ?? null })
+    if (value.trim() === '') {
+      void save(taskId, { timeEstimateMinutes: null })
+      return
+    }
+    const minutes = parseTimeInput(value)
+    if (minutes !== null && minutes > 0) {
+      setDraft(minutesToHHMM(minutes))   // normalise draft so cell shows HH:MM
+      void save(taskId, { timeEstimateMinutes: minutes })
+    } else {
+      cancelEdit()  // revert — re-render will show original value from store
+    }
   }
 
   const handleCreateTask = async () => {

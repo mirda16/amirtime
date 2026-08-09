@@ -12,7 +12,7 @@ import {
 import { DateInput } from '@mantine/dates'
 import { useTranslation } from 'react-i18next'
 import type { TaskPriority } from '@shared/types'
-import { hhmmToMinutes } from '../../utils/formatDuration'
+import { parseTimeInput } from '../../utils/formatDuration'
 import type { KanbanStatus } from '@shared/types'
 import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { useProjectsStore } from '../../stores/projectsStore'
@@ -50,7 +50,7 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
       priority,
       tagIds,
       dueDate,
-      timeEstimateMinutes: estimate === '' ? null : hhmmToMinutes(estimate),
+      timeEstimateMinutes: estimate.trim() === '' ? null : parseTimeInput(estimate),
       kanbanStatus: defaultKanbanStatus
     })
     onClose()
