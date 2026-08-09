@@ -19,6 +19,7 @@
     "settings": "Settings",
     "today": "Today",
     "kanban": "Kanban",
+    "archive": "Archive",
     "projects": "Projects",
     "tags": "Tags",
     "allTasks": "All tasks"
@@ -56,7 +57,11 @@
     "priorityNone": "None",
     "priorityLow": "Low",
     "priorityMedium": "Medium",
-    "priorityHigh": "High"
+    "priorityHigh": "High",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "deleteForever": "Delete permanently",
+    "deleteForeverConfirm": "Permanently delete this task? This cannot be undone."
   },
   "projects": {
     "newProject": "New project",
@@ -141,6 +146,13 @@
     "syncCreated": "Sync file created — data exported",
     "syncConnected": "Connected — data merged from sync file",
     "syncExportDone": "Sync file updated"
+  },
+  "archive": {
+    "title": "Archive",
+    "noTasks": "Archive is empty",
+    "archivedAt": "Archived",
+    "restoreSuccess": "Task restored",
+    "deleteSuccess": "Task deleted permanently"
   },
   "kanban": {
     "title": "Kanban",

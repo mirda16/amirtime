@@ -14,6 +14,7 @@ interface TaskListProps {
   onToggleDone: (id: string) => void
   onOpen: (task: Task) => void
   onDelete: (id: string) => void
+  onArchive?: (id: string) => void
   onReorder: (orderedIds: string[]) => void
   onStartPomodoro?: (taskId: string) => void
 }
@@ -43,6 +44,7 @@ export function TaskList({
   onToggleDone,
   onOpen,
   onDelete,
+  onArchive,
   onReorder,
   onStartPomodoro
 }: TaskListProps) {
@@ -96,6 +98,7 @@ export function TaskList({
     onToggleDone: () => onToggleDone(task.id),
     onOpen: () => onOpen(task),
     onDelete: () => onDelete(task.id),
+    onArchive: onArchive ? () => onArchive(task.id) : undefined,
     onToggleTimer: () => handleToggleTimer(task.id),
     onStartPomodoro: onStartPomodoro ? () => onStartPomodoro(task.id) : undefined
   })

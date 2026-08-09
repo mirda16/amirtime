@@ -52,7 +52,9 @@ const api = {
     setTags: (taskId: string, tagIds: string[]): Promise<Task> =>
       ipcRenderer.invoke(IpcChannels.tasksSetTags, taskId, tagIds),
     reorder: (orderedIds: string[]): Promise<void> =>
-      ipcRenderer.invoke(IpcChannels.tasksReorder, orderedIds)
+      ipcRenderer.invoke(IpcChannels.tasksReorder, orderedIds),
+    archive: (id: string): Promise<void> => ipcRenderer.invoke(IpcChannels.tasksArchive, id),
+    unarchive: (id: string): Promise<Task> => ipcRenderer.invoke(IpcChannels.tasksUnarchive, id)
   },
   timeEntries: {
     getActive: (): Promise<TimeEntry | null> =>

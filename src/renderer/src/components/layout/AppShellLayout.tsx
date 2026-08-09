@@ -1,6 +1,7 @@
 import { ActionIcon, AppShell, Badge, Burger, Group, NavLink, ScrollArea, Text, Title } from '@mantine/core'
 import { useDisclosure, useHotkeys } from '@mantine/hooks'
 import {
+  IconArchive,
   IconCalendarWeek,
   IconChecklist,
   IconClockHour4,
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { path: '/calendar', labelKey: 'nav.calendar', Icon: IconCalendarWeek },
   { path: '/pomodoro', labelKey: 'nav.pomodoro', Icon: IconClockHour4 },
   { path: '/reports', labelKey: 'nav.reports', Icon: IconReportAnalytics },
+  { path: '/archive', labelKey: 'nav.archive', Icon: IconArchive },
   { path: '/settings', labelKey: 'nav.settings', Icon: IconSettings }
 ] as const
 

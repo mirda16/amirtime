@@ -10,6 +10,7 @@ import SettingsPage from './routes/SettingsPage'
 import TasksPage from './routes/TasksPage'
 import KanbanPage from './routes/KanbanPage'
 import TodayPage from './routes/TodayPage'
+import ArchivePage from './routes/ArchivePage'
 import { useProjectsStore } from './stores/projectsStore'
 import { useSettingsStore } from './stores/settingsStore'
 import { useTagsStore } from './stores/tagsStore'
@@ -79,6 +80,7 @@ function App() {
             <Route path="/pomodoro" element={<PomodoroPage />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/archive" element={<ArchivePage />} />
           </Route>
         </Routes>
       </HashRouter>

@@ -23,6 +23,7 @@ export default function TasksPage() {
   const tasks = useTasksStore((s) => s.tasks)
   const toggleDone = useTasksStore((s) => s.toggleDone)
   const deleteTask = useTasksStore((s) => s.deleteTask)
+  const archiveTask = useTasksStore((s) => s.archiveTask)
   const reorderTasks = useTasksStore((s) => s.reorderTasks)
   const projects = useProjectsStore((s) => s.projects)
   const tags = useTagsStore((s) => s.tags)
@@ -135,6 +136,7 @@ export default function TasksPage() {
         onToggleDone={toggleDone}
         onOpen={openEdit}
         onDelete={deleteTask}
+        onArchive={(id) => void archiveTask(id)}
         onReorder={sortKey === 'default' ? handleReorder : () => {}}
         onStartPomodoro={handleStartPomodoro}
       />

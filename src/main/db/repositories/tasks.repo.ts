@@ -20,6 +20,7 @@ interface TaskRow {
   time_spent_seconds: number
   kanban_status: string
   sort_order: number
+  archived_at: string | null
   created_at: string
   updated_at: string
 }
@@ -41,6 +42,7 @@ function mapRow(row: TaskRow, tagIds: string[]): Task {
     timeSpentSeconds: row.time_spent_seconds,
     kanbanStatus: row.kanban_status as KanbanStatus,
     sortOrder: row.sort_order,
+    archivedAt: row.archived_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     tagIds,
@@ -83,8 +85,15 @@ export const tasksRepo = {
       conditions.push('t.project_id = ?')
       params.push(filter.projectId)
     }
-    if (!filter?.includeDone) {
-      conditions.push('t.is_done = 0')
+    if (filter?.archived) {
+      // Archive view: only archived tasks, all done states
+      conditions.push('t.archived_at IS NOT NULL')
+    } else {
+      // Normal view: only non-archived tasks
+      conditions.push('t.archived_at IS NULL')
+      if (!filter?.includeDone) {
+        conditions.push('t.is_done = 0')
+      }
     }
     if (conditions.length) {
       sql += ' WHERE ' + conditions.join(' AND ')
@@ -249,5 +258,20 @@ export const tasksRepo = {
       ids.forEach((id, index) => stmt.run(index, now, id))
     })
     applyReorder(orderedIds)
+  },
+
+  archive(id: string): void {
+    const now = new Date().toISOString()
+    getDb()
+      .prepare('UPDATE tasks SET archived_at = ?, updated_at = ? WHERE id = ?')
+      .run(now, now, id)
+  },
+
+  unarchive(id: string): Task {
+    const now = new Date().toISOString()
+    getDb()
+      .prepare('UPDATE tasks SET archived_at = NULL, updated_at = ? WHERE id = ?')
+      .run(now, id)
+    return this.getById(id) as Task
   }
 }

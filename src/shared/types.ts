@@ -35,6 +35,7 @@ export interface Task {
   timeSpentSeconds: number
   kanbanStatus: KanbanStatus
   sortOrder: number
+  archivedAt: string | null
   createdAt: string
   updatedAt: string
   tagIds: string[]
@@ -129,6 +130,8 @@ export interface TaskFilter {
   projectId?: string | null
   tagId?: string | null
   includeDone?: boolean
+  /** When true, returns ONLY archived tasks instead of active ones */
+  archived?: boolean
 }
 
 export interface ReportRange {

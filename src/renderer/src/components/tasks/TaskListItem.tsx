@@ -1,5 +1,6 @@
 import { ActionIcon, Badge, Checkbox, Group, Text } from '@mantine/core'
 import {
+  IconArchive,
   IconClockPlay,
   IconFlag,
   IconGripVertical,
@@ -24,6 +25,7 @@ interface TaskListItemProps {
   onToggleDone: () => void
   onOpen: () => void
   onDelete: () => void
+  onArchive?: () => void
   onToggleTimer: () => void
   onStartPomodoro?: () => void
   dragHandleProps?: HTMLAttributes<HTMLDivElement>
@@ -38,6 +40,7 @@ export function TaskListItem({
   onToggleDone,
   onOpen,
   onDelete,
+  onArchive,
   onToggleTimer,
   onStartPomodoro,
   dragHandleProps
@@ -149,6 +152,16 @@ export function TaskListItem({
           aria-label={isTracking ? t('tasks.stopTimer') : t('tasks.startTimer')}
         >
           {isTracking ? <IconPlayerStop size={16} /> : <IconPlayerPlay size={16} />}
+        </ActionIcon>
+      )}
+      {onArchive && (
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          onClick={onArchive}
+          aria-label={t('tasks.archive')}
+        >
+          <IconArchive size={16} />
         </ActionIcon>
       )}
       <ActionIcon variant="subtle" color="red" onClick={onDelete} aria-label={t('common.delete')}>

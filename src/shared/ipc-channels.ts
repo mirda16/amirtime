@@ -17,6 +17,8 @@ export const IpcChannels = {
   tasksDelete: 'tasks:delete',
   tasksSetTags: 'tasks:setTags',
   tasksReorder: 'tasks:reorder',
+  tasksArchive: 'tasks:archive',
+  tasksUnarchive: 'tasks:unarchive',
 
   timeEntriesGetActive: 'timeEntries:getActive',
   timeEntriesStart: 'timeEntries:start',

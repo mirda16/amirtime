@@ -19,6 +19,7 @@
     "settings": "Nastavení",
     "today": "Dnes",
     "kanban": "Kanban",
+    "archive": "Archiv",
     "projects": "Projekty",
     "tags": "Tagy",
     "allTasks": "Všechny úkoly"
@@ -56,7 +57,11 @@
     "priorityNone": "Žádná",
     "priorityLow": "Nízká",
     "priorityMedium": "Střední",
-    "priorityHigh": "Vysoká"
+    "priorityHigh": "Vysoká",
+    "archive": "Archivovat",
+    "unarchive": "Obnovit",
+    "deleteForever": "Smazat trvale",
+    "deleteForeverConfirm": "Trvale smazat tento úkol? Tuto akci nelze vrátit."
   },
   "projects": {
     "newProject": "Nový projekt",
@@ -141,6 +146,13 @@
     "syncCreated": "Sync soubor vytvořen — data exportována",
     "syncConnected": "Připojeno — data sloučena ze sync souboru",
     "syncExportDone": "Sync soubor aktualizován"
+  },
+  "archive": {
+    "title": "Archiv",
+    "noTasks": "Archiv je prázdný",
+    "archivedAt": "Archivováno",
+    "restoreSuccess": "Úkol obnoven",
+    "deleteSuccess": "Úkol trvale smazán"
   },
   "kanban": {
     "title": "Kanban",

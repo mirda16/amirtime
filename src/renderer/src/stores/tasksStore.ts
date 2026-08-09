@@ -9,6 +9,7 @@ interface TasksState {
   createTask: (input: CreateTaskInput) => Promise<Task>
   updateTask: (id: string, patch: UpdateTaskInput) => Promise<void>
   deleteTask: (id: string) => Promise<void>
+  archiveTask: (id: string) => Promise<void>
   toggleDone: (id: string) => Promise<void>
   reorderTasks: (orderedIds: string[]) => Promise<void>
   createSubtask: (taskId: string, input: CreateSubtaskInput) => Promise<void>
@@ -45,6 +46,14 @@ export const useTasksStore = create<TasksState>((set, get) => ({
       useTimerStore.getState().reset()
     }
     await window.api.tasks.delete(id)
+    set({ tasks: get().tasks.filter((t) => t.id !== id) })
+  },
+
+  archiveTask: async (id) => {
+    if (useTimerStore.getState().activeEntry?.taskId === id) {
+      useTimerStore.getState().reset()
+    }
+    await window.api.tasks.archive(id)
     set({ tasks: get().tasks.filter((t) => t.id !== id) })
   },
 

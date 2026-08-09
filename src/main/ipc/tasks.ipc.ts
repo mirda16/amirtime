@@ -38,4 +38,15 @@ export function registerTasksIpc(): void {
     tasksRepo.reorder(orderedIds)
     syncService.scheduleExport()
   })
+
+  ipcMain.handle(IpcChannels.tasksArchive, (_event, id: string) => {
+    tasksRepo.archive(id)
+    syncService.scheduleExport()
+  })
+
+  ipcMain.handle(IpcChannels.tasksUnarchive, (_event, id: string) => {
+    const task = tasksRepo.unarchive(id)
+    syncService.scheduleExport()
+    return task
+  })
 }
