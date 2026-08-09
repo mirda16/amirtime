@@ -154,7 +154,8 @@
     "statusAll": "Vše",
     "statusActive": "Aktivní",
     "statusDone": "Hotové",
-    "rows": "úkolů"
+    "rows": "úkolů",
+    "newTaskPlaceholder": "Přidat úkol… (Enter pro vytvoření)"
   },
   "archive": {
     "title": "Archiv",

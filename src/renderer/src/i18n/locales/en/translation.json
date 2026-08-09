@@ -154,7 +154,8 @@
     "statusAll": "All",
     "statusActive": "Active",
     "statusDone": "Done",
-    "rows": "tasks"
+    "rows": "tasks",
+    "newTaskPlaceholder": "Add task… (Enter to create)"
   },
   "archive": {
     "title": "Archive",
