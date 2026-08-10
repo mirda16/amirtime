@@ -12,6 +12,9 @@ interface TimerState {
   elapsedSeconds: number
   intervalId: ReturnType<typeof setInterval> | null
   reminderSentAt: number | null
+  /** Set to true after the user dismisses the reminder so the interval won't
+   *  re-fire it while the same timer session is still running. Reset on start(). */
+  reminderDismissed: boolean
   autoStopTimeoutId: ReturnType<typeof setTimeout> | null
   init: () => Promise<void>
   start: (taskId: string) => Promise<void>
@@ -35,8 +38,8 @@ function startTicking(
     const elapsed = secondsSince(entry.startedAt)
     set({ elapsedSeconds: elapsed })
 
-    const { reminderSentAt } = get()
-    if (reminderSentAt) return
+    const { reminderSentAt, reminderDismissed } = get()
+    if (reminderSentAt || reminderDismissed) return
 
     const { timerReminderHours } = useSettingsStore.getState().settings
     const thresholdSeconds = timerReminderHours * 3600
@@ -60,6 +63,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
   elapsedSeconds: 0,
   intervalId: null,
   reminderSentAt: null,
+  reminderDismissed: false,
   autoStopTimeoutId: null,
 
   init: async () => {
@@ -76,7 +80,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     }
     const entry = await window.api.timeEntries.start(taskId)
     const intervalId = startTicking(set, get)
-    set({ activeEntry: entry, elapsedSeconds: 0, intervalId, reminderSentAt: null, autoStopTimeoutId: null })
+    set({ activeEntry: entry, elapsedSeconds: 0, intervalId, reminderSentAt: null, reminderDismissed: false, autoStopTimeoutId: null })
   },
 
   stop: async () => {
@@ -84,7 +88,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     if (!activeEntry) return
     if (intervalId) clearInterval(intervalId)
     if (autoStopTimeoutId) clearTimeout(autoStopTimeoutId)
-    set({ activeEntry: null, elapsedSeconds: 0, intervalId: null, reminderSentAt: null, autoStopTimeoutId: null })
+    set({ activeEntry: null, elapsedSeconds: 0, intervalId: null, reminderSentAt: null, reminderDismissed: false, autoStopTimeoutId: null })
 
     const { task } = await window.api.timeEntries.stop(activeEntry.id)
     if (task) {
@@ -98,12 +102,15 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     const { intervalId, autoStopTimeoutId } = get()
     if (intervalId) clearInterval(intervalId)
     if (autoStopTimeoutId) clearTimeout(autoStopTimeoutId)
-    set({ activeEntry: null, elapsedSeconds: 0, intervalId: null, reminderSentAt: null, autoStopTimeoutId: null })
+    set({ activeEntry: null, elapsedSeconds: 0, intervalId: null, reminderSentAt: null, reminderDismissed: false, autoStopTimeoutId: null })
   },
 
   dismissReminder: () => {
     const { autoStopTimeoutId } = get()
     if (autoStopTimeoutId) clearTimeout(autoStopTimeoutId)
-    set({ reminderSentAt: null, autoStopTimeoutId: null })
+    // reminderDismissed: true prevents the interval from re-sending the
+    // notification on the very next tick (elapsed is still >= threshold).
+    // It resets only when the user starts a new timer session.
+    set({ reminderSentAt: null, reminderDismissed: true, autoStopTimeoutId: null })
   }
 }))
