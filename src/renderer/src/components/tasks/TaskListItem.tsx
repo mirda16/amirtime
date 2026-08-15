@@ -6,6 +6,7 @@ import {
   IconGripVertical,
   IconPlayerPlay,
   IconPlayerStop,
+  IconRepeat,
   IconTrash
 } from '@tabler/icons-react'
 import dayjs from 'dayjs'
@@ -127,6 +128,11 @@ export function TaskListItem({
               </Badge>
             )
           })()}
+          {task.recurrenceRule && (
+            <Badge size="xs" color="violet" variant="light" leftSection={<IconRepeat size={10} />}>
+              {t('tasks.recurrenceBadge')}
+            </Badge>
+          )}
           {totalSeconds > 0 && (
             <Badge size="xs" color={isTracking ? 'red' : 'gray'} variant={isTracking ? 'filled' : 'outline'}>
               {formatDuration(totalSeconds)}

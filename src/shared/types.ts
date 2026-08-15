@@ -18,6 +18,17 @@ export interface Tag {
 
 export type TaskPriority = 'none' | 'low' | 'medium' | 'high'
 export type KanbanStatus = 'backlog' | 'in_progress' | 'done'
+export type RecurrenceType = 'daily' | 'weekly' | 'monthly' | 'interval'
+
+export interface RecurrenceRule {
+  type: RecurrenceType
+  /** 'interval': repeat every N days */
+  days?: number
+  /** 'weekly': days of week, 0 = Sun … 6 = Sat */
+  weekdays?: number[]
+  /** 'monthly': day of month 1-31 */
+  monthDay?: number
+}
 
 export interface Task {
   id: string
@@ -36,6 +47,7 @@ export interface Task {
   kanbanStatus: KanbanStatus
   sortOrder: number
   archivedAt: string | null
+  recurrenceRule: RecurrenceRule | null
   createdAt: string
   updatedAt: string
   tagIds: string[]
@@ -74,6 +86,7 @@ export interface CreateTaskInput {
   dueDate?: string | null
   timeEstimateMinutes?: number | null
   tagIds?: string[]
+  recurrenceRule?: RecurrenceRule | null
 }
 
 export interface UpdateTaskInput {
@@ -91,6 +104,7 @@ export interface UpdateTaskInput {
   timeSpentSeconds?: number
   sortOrder?: number
   tagIds?: string[]
+  recurrenceRule?: RecurrenceRule | null
 }
 
 export interface Subtask {

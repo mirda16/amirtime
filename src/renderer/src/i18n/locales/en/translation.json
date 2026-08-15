@@ -62,7 +62,17 @@
     "archive": "Archive",
     "unarchive": "Restore",
     "deleteForever": "Delete permanently",
-    "deleteForeverConfirm": "Permanently delete this task? This cannot be undone."
+    "deleteForeverConfirm": "Permanently delete this task? This cannot be undone.",
+    "recurrence": "Recurrence",
+    "recurrenceNone": "Does not repeat",
+    "recurrenceDaily": "Daily",
+    "recurrenceWeekly": "Weekly",
+    "recurrenceMonthly": "Monthly",
+    "recurrenceInterval": "Every N days",
+    "recurrenceIntervalDays": "Repeat every",
+    "recurrenceWeekdays": "Days of week",
+    "recurrenceMonthDay": "Day of month",
+    "recurrenceBadge": "Repeating"
   },
   "projects": {
     "newProject": "New project",
@@ -131,6 +141,7 @@
     "day4": "Thu",
     "day5": "Fri",
     "day6": "Sat",
+    "days": "days",
     "dataSection": "Data",
     "dataDescription": "Export all your data to a file for backup, or import it back later.",
     "exportData": "Export data",

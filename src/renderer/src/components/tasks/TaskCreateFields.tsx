@@ -11,13 +11,13 @@ import {
 } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useTranslation } from 'react-i18next'
-import type { TaskPriority } from '@shared/types'
+import type { KanbanStatus, RecurrenceRule, TaskPriority } from '@shared/types'
 import { parseTimeInput } from '../../utils/formatDuration'
-import type { KanbanStatus } from '@shared/types'
 import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useTasksStore } from '../../stores/tasksStore'
+import { RecurrenceFields } from './RecurrenceFields'
 
 interface TaskCreateFieldsProps {
   onClose: () => void
@@ -39,6 +39,7 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
   const [estimate, setEstimate] = useState('')
   const [color, setColor] = useState<string | null>(null)
   const [priority, setPriority] = useState<TaskPriority>('none')
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(null)
 
   const handleCreate = async () => {
     if (!title.trim()) return
@@ -51,7 +52,8 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
       tagIds,
       dueDate,
       timeEstimateMinutes: estimate.trim() === '' ? null : parseTimeInput(estimate),
-      kanbanStatus: defaultKanbanStatus
+      kanbanStatus: defaultKanbanStatus,
+      recurrenceRule
     })
     onClose()
   }
@@ -126,6 +128,7 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
           allowDeselect={false}
         />
       </Group>
+      <RecurrenceFields value={recurrenceRule} onChange={setRecurrenceRule} />
       <Group justify="flex-end" mt="md">
         <Button variant="default" onClick={onClose}>
           {t('common.close')}

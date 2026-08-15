@@ -18,12 +18,13 @@ import {
 import { DateInput } from '@mantine/dates'
 import { useDebouncedCallback } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
-import type { Task, TaskPriority, UpdateTaskInput } from '@shared/types'
+import type { RecurrenceRule, Task, TaskPriority, UpdateTaskInput } from '@shared/types'
 import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { SubtaskList } from './SubtaskList'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useTasksStore } from '../../stores/tasksStore'
+import { RecurrenceFields } from './RecurrenceFields'
 
 interface TaskEditFieldsProps {
   task: Task
@@ -46,6 +47,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const [color, setColor] = useState<string | null>(task.color)
   const [priority, setPriority] = useState<TaskPriority>(task.priority)
   const [timeSpent, setTimeSpent] = useState(secondsToHHMM(task.timeSpentSeconds))
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(task.recurrenceRule)
 
   useEffect(() => {
     setTitle(task.title)
@@ -57,6 +59,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     setColor(task.color)
     setPriority(task.priority)
     setTimeSpent(secondsToHHMM(task.timeSpentSeconds))
+    setRecurrenceRule(task.recurrenceRule)
   }, [task])
 
   const debouncedUpdate = useDebouncedCallback((patch: UpdateTaskInput) => {
@@ -121,6 +124,11 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     const next = (value ?? 'none') as TaskPriority
     setPriority(next)
     void updateTask(task.id, { priority: next })
+  }
+
+  const handleRecurrenceChange = (rule: RecurrenceRule | null) => {
+    setRecurrenceRule(rule)
+    void updateTask(task.id, { recurrenceRule: rule })
   }
 
   const handleDelete = async () => {
@@ -207,6 +215,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
           allowDeselect={false}
         />
       </Group>
+      <RecurrenceFields value={recurrenceRule} onChange={handleRecurrenceChange} />
       <SubtaskList taskId={task.id} />
       <Group justify="space-between" mt="md">
         <Button color="red" variant="subtle" onClick={handleDelete}>

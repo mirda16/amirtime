@@ -6,6 +6,7 @@ import migration002 from './migrations/002_task_extras.sql?raw'
 import migration003 from './migrations/003_subtasks.sql?raw'
 import migration004 from './migrations/004_kanban.sql?raw'
 import migration005 from './migrations/005_archive.sql?raw'
+import migration006 from './migrations/006_recurrence.sql?raw'
 
 interface Migration {
   version: number
@@ -17,7 +18,8 @@ const MIGRATIONS: Migration[] = [
   { version: 2, sql: migration002 },
   { version: 3, sql: migration003 },
   { version: 4, sql: migration004 },
-  { version: 5, sql: migration005 }
+  { version: 5, sql: migration005 },
+  { version: 6, sql: migration006 }
 ]
 
 export const CURRENT_SCHEMA_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version

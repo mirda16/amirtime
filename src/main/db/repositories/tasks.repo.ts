@@ -1,8 +1,36 @@
 import { randomUUID } from 'node:crypto'
+import dayjs from 'dayjs'
 import type Database from 'better-sqlite3'
 import { getDb } from '../index'
-import type { CreateTaskInput, KanbanStatus, Task, TaskFilter, TaskPriority, UpdateTaskInput } from '@shared/types'
+import type { CreateTaskInput, KanbanStatus, RecurrenceRule, Task, TaskFilter, TaskPriority, UpdateTaskInput } from '@shared/types'
 import { subtasksRepo } from './subtasks.repo'
+
+// ── Recurrence helpers ────────────────────────────────────────────────────────
+
+function nextOccurrence(rule: RecurrenceRule, fromDate: string): string {
+  const from = dayjs(fromDate)
+  switch (rule.type) {
+    case 'daily':
+      return from.add(1, 'day').format('YYYY-MM-DD')
+    case 'interval':
+      return from.add(rule.days ?? 1, 'day').format('YYYY-MM-DD')
+    case 'weekly': {
+      const weekdays = [...(rule.weekdays ?? [1, 2, 3, 4, 5])].sort((a, b) => a - b)
+      const cur = from.day()
+      const next = weekdays.find((d) => d > cur) ?? weekdays[0]
+      const until = next > cur ? next - cur : 7 - cur + next
+      return from.add(until, 'day').format('YYYY-MM-DD')
+    }
+    case 'monthly': {
+      const targetDay = rule.monthDay ?? from.date()
+      let next = from.date(targetDay)
+      if (!next.isAfter(from, 'day')) next = next.add(1, 'month').date(targetDay)
+      return next.format('YYYY-MM-DD')
+    }
+    default:
+      return from.add(1, 'day').format('YYYY-MM-DD')
+  }
+}
 
 interface TaskRow {
   id: string
@@ -21,6 +49,7 @@ interface TaskRow {
   kanban_status: string
   sort_order: number
   archived_at: string | null
+  recurrence_rule: string | null
   created_at: string
   updated_at: string
 }
@@ -43,6 +72,7 @@ function mapRow(row: TaskRow, tagIds: string[]): Task {
     kanbanStatus: row.kanban_status as KanbanStatus,
     sortOrder: row.sort_order,
     archivedAt: row.archived_at,
+    recurrenceRule: row.recurrence_rule ? (JSON.parse(row.recurrence_rule) as RecurrenceRule) : null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     tagIds,
@@ -122,8 +152,9 @@ export const tasksRepo = {
     db.prepare(
       `INSERT INTO tasks (
         id, title, description, project_id, color, priority, is_done,
-        due_date, time_estimate_minutes, sort_order, time_spent_seconds, kanban_status, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?, ?)`
+        due_date, time_estimate_minutes, sort_order, time_spent_seconds, kanban_status,
+        recurrence_rule, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?, ?, ?)`
     ).run(
       id,
       input.title,
@@ -135,6 +166,7 @@ export const tasksRepo = {
       input.timeEstimateMinutes ?? null,
       maxOrder + 1,
       input.kanbanStatus ?? 'backlog',
+      input.recurrenceRule ? JSON.stringify(input.recurrenceRule) : null,
       now,
       now
     )
@@ -154,13 +186,31 @@ export const tasksRepo = {
     if (!existing) throw new Error(`Task not found: ${id}`)
 
     const now = new Date().toISOString()
-    const isDone = patch.isDone !== undefined ? patch.isDone : !!existing.is_done
-    const doneAt =
+    let isDone = patch.isDone !== undefined ? patch.isDone : !!existing.is_done
+    let doneAt =
       patch.isDone !== undefined ? (patch.isDone ? now : null) : existing.done_at
 
+    // Resolve recurrence rule (patch overrides existing)
+    const recurrenceRuleRaw =
+      patch.recurrenceRule !== undefined ? patch.recurrenceRule : existing.recurrence_rule
+        ? (JSON.parse(existing.recurrence_rule) as RecurrenceRule)
+        : null
+    const recurrenceRuleStr = recurrenceRuleRaw ? JSON.stringify(recurrenceRuleRaw) : null
+
+    // When marking a recurring task as done, advance due_date instead of completing it
+    let dueDate = patch.dueDate !== undefined ? patch.dueDate : existing.due_date
+    let advancedByRecurrence = false
+    if (patch.isDone === true && recurrenceRuleRaw) {
+      const fromDate = dueDate ?? dayjs().format('YYYY-MM-DD')
+      dueDate = nextOccurrence(recurrenceRuleRaw, fromDate)
+      isDone = false
+      doneAt = null
+      advancedByRecurrence = true
+    }
+
     let kanbanStatus = patch.kanbanStatus !== undefined ? patch.kanbanStatus : existing.kanban_status
-    if (patch.isDone === true && kanbanStatus !== 'done') kanbanStatus = 'done'
-    else if (patch.isDone === false && kanbanStatus === 'done') kanbanStatus = 'backlog'
+    if (isDone && kanbanStatus !== 'done') kanbanStatus = 'done'
+    else if (!isDone && kanbanStatus === 'done' && (patch.isDone === false || advancedByRecurrence)) kanbanStatus = 'backlog'
 
     // Pre-calculate actual time spent and what to do with time entries
     let actualTimeSpentSeconds = existing.time_spent_seconds
@@ -195,7 +245,7 @@ export const tasksRepo = {
       `UPDATE tasks SET
         title = ?, description = ?, project_id = ?, color = ?, priority = ?, is_done = ?, done_at = ?,
         due_date = ?, scheduled_at = ?, scheduled_end = ?, time_estimate_minutes = ?,
-        time_spent_seconds = ?, sort_order = ?, kanban_status = ?, updated_at = ?
+        time_spent_seconds = ?, sort_order = ?, kanban_status = ?, recurrence_rule = ?, updated_at = ?
        WHERE id = ?`
     ).run(
       patch.title ?? existing.title,
@@ -205,7 +255,7 @@ export const tasksRepo = {
       patch.priority ?? existing.priority,
       isDone ? 1 : 0,
       doneAt,
-      patch.dueDate !== undefined ? patch.dueDate : existing.due_date,
+      dueDate,
       patch.scheduledAt !== undefined ? patch.scheduledAt : existing.scheduled_at,
       patch.scheduledEnd !== undefined ? patch.scheduledEnd : existing.scheduled_end,
       patch.timeEstimateMinutes !== undefined
@@ -214,6 +264,7 @@ export const tasksRepo = {
       actualTimeSpentSeconds,
       patch.sortOrder !== undefined ? patch.sortOrder : existing.sort_order,
       kanbanStatus,
+      recurrenceRuleStr,
       now,
       id
     )

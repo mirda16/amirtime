@@ -62,7 +62,17 @@
     "archive": "Archivovat",
     "unarchive": "Obnovit",
     "deleteForever": "Smazat trvale",
-    "deleteForeverConfirm": "Trvale smazat tento úkol? Tuto akci nelze vrátit."
+    "deleteForeverConfirm": "Trvale smazat tento úkol? Tuto akci nelze vrátit.",
+    "recurrence": "Opakování",
+    "recurrenceNone": "Neopakuje se",
+    "recurrenceDaily": "Každý den",
+    "recurrenceWeekly": "Každý týden",
+    "recurrenceMonthly": "Každý měsíc",
+    "recurrenceInterval": "Každých N dní",
+    "recurrenceIntervalDays": "Opakovat každých",
+    "recurrenceWeekdays": "Dny v týdnu",
+    "recurrenceMonthDay": "Den v měsíci",
+    "recurrenceBadge": "Opakuje se"
   },
   "projects": {
     "newProject": "Nový projekt",
@@ -131,6 +141,7 @@
     "day4": "Čt",
     "day5": "Pá",
     "day6": "So",
+    "days": "dní",
     "dataSection": "Data",
     "dataDescription": "Exportujte všechna svá data do souboru pro zálohu, nebo je později importujte zpět.",
     "exportData": "Exportovat data",
