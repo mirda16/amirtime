@@ -175,6 +175,7 @@ export interface AppSettings {
   theme: 'light' | 'dark' | 'auto'
   pomodoro: PomodoroSettings
   timerReminderHours: number
+  timerAutoStop: boolean
   inactivityReminderMinutes: number
   workdayStart: string
   workdayEnd: string
@@ -218,6 +219,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     cyclesBeforeLongBreak: 4
   },
   timerReminderHours: 2,
+  timerAutoStop: true,
   inactivityReminderMinutes: 10,
   workdayStart: '09:00',
   workdayEnd: '17:00',

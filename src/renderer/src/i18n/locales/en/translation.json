@@ -114,6 +114,8 @@
     "timerReminder": "Forgotten timer reminder",
     "timerReminderDesc": "Show a notification if the timer runs longer than this. Auto-stops after 5 more minutes.",
     "timerReminderOff": "Off",
+    "timerAutoStop": "Auto-stop timer after reminder",
+    "timerAutoStopDesc": "If enabled, the timer stops automatically 5 minutes after the reminder. If disabled, the reminder is shown but the timer keeps running.",
     "hours": "hours",
     "minutes": "min",
     "inactivitySection": "Inactivity reminder",
@@ -172,7 +174,8 @@
   },
   "timer": {
     "reminderTitle": "Timer still running",
-    "reminderBody": "Timer has been running for {{time}}. Still working? It will auto-stop in 5 minutes — click to cancel."
+    "reminderBody": "Timer has been running for {{time}}. Still working? It will auto-stop in 5 minutes — click to cancel.",
+    "reminderBodyNoStop": "Timer has been running for {{time}}. Still working? Click to dismiss."
   },
   "today": {
     "overdue": "Overdue",

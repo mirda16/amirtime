@@ -41,18 +41,20 @@ function startTicking(
     const { reminderSentAt, reminderDismissed } = get()
     if (reminderSentAt || reminderDismissed) return
 
-    const { timerReminderHours } = useSettingsStore.getState().settings
+    const { timerReminderHours, timerAutoStop } = useSettingsStore.getState().settings
     const thresholdSeconds = timerReminderHours * 3600
     if (thresholdSeconds <= 0 || elapsed < thresholdSeconds) return
 
     void window.api.notifications.show({
       title: i18n.t('timer.reminderTitle'),
-      body: i18n.t('timer.reminderBody', { time: formatDuration(elapsed) })
+      body: timerAutoStop
+        ? i18n.t('timer.reminderBody', { time: formatDuration(elapsed) })
+        : i18n.t('timer.reminderBodyNoStop', { time: formatDuration(elapsed) })
     })
 
-    const autoStopTimeoutId = setTimeout(() => {
-      void get().stop()
-    }, AUTO_STOP_DELAY_MS)
+    const autoStopTimeoutId = timerAutoStop
+      ? setTimeout(() => void get().stop(), AUTO_STOP_DELAY_MS)
+      : null
 
     set({ reminderSentAt: Date.now(), autoStopTimeoutId })
   }, 1000)

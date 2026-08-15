@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Chip, Code, Group, Modal, NumberInput, Select, SegmentedControl, SimpleGrid, Stack, Text, Title } from '@mantine/core'
+import { Button, Chip, Code, Group, Modal, NumberInput, Select, SegmentedControl, SimpleGrid, Stack, Switch, Text, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import type { AppSettings } from '@shared/types'
@@ -145,6 +145,14 @@ export default function SettingsPage() {
         ]}
         allowDeselect={false}
       />
+      {settings.timerReminderHours > 0 && (
+        <Switch
+          label={t('settings.timerAutoStop')}
+          description={t('settings.timerAutoStopDesc')}
+          checked={settings.timerAutoStop}
+          onChange={(e) => void updateSetting('timerAutoStop', e.currentTarget.checked)}
+        />
+      )}
 
       <Title order={4}>{t('settings.inactivitySection')}</Title>
       <Select

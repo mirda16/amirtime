@@ -114,6 +114,8 @@
     "timerReminder": "Připomínka zapomenutého časovače",
     "timerReminderDesc": "Zobrazí upozornění pokud časovač běží déle než tato hodnota. Po dalších 5 minutách se automaticky zastaví.",
     "timerReminderOff": "Vypnuto",
+    "timerAutoStop": "Automaticky zastavit časovač po připomenutí",
+    "timerAutoStopDesc": "Pokud je zapnuto, časovač se zastaví 5 minut po připomenutí. Pokud je vypnuto, připomenutí se zobrazí, ale časovač běží dál.",
     "hours": "hod",
     "minutes": "min",
     "inactivitySection": "Připomínka nečinnosti",
@@ -172,7 +174,8 @@
   },
   "timer": {
     "reminderTitle": "Časovač stále běží",
-    "reminderBody": "Časovač běží již {{time}}. Stále pracuješ? Za 5 minut se automaticky zastaví — klikni pro zrušení."
+    "reminderBody": "Časovač běží již {{time}}. Stále pracuješ? Za 5 minut se automaticky zastaví — klikni pro zrušení.",
+    "reminderBodyNoStop": "Časovač běží již {{time}}. Stále pracuješ? Klikni pro zavření."
   },
   "today": {
     "overdue": "Po termínu",
