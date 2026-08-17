@@ -191,6 +191,7 @@
   "today": {
     "overdue": "Po termínu",
     "today": "Dnes",
+    "tomorrow": "Zítra",
     "noTasks": "Žádné úkoly na dnes. Užijte si den!"
   },
   "calendar": {

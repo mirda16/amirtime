@@ -191,6 +191,7 @@
   "today": {
     "overdue": "Overdue",
     "today": "Today",
+    "tomorrow": "Tomorrow",
     "noTasks": "No tasks for today. Enjoy your day!"
   },
   "calendar": {

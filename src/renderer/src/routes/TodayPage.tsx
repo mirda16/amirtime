@@ -24,26 +24,32 @@ export default function TodayPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null)
 
   const today = dayjs().format('YYYY-MM-DD')
+  const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD')
 
-  const { overdue, todayTasks } = useMemo(() => {
+  const { overdue, todayTasks, tomorrowTasks } = useMemo(() => {
     const overdue: Task[] = []
     const todayTasks: Task[] = []
+    const tomorrowTasks: Task[] = []
 
     for (const task of tasks) {
       if (task.isDone) continue
       const isScheduledToday = task.scheduledAt?.startsWith(today)
       const isDueToday = task.dueDate === today
       const isOverdue = task.dueDate && task.dueDate < today
+      const isScheduledTomorrow = task.scheduledAt?.startsWith(tomorrow)
+      const isDueTomorrow = task.dueDate === tomorrow
 
       if (isScheduledToday || isDueToday) {
         todayTasks.push(task)
       } else if (isOverdue) {
         overdue.push(task)
+      } else if (isScheduledTomorrow || isDueTomorrow) {
+        tomorrowTasks.push(task)
       }
     }
 
-    return { overdue, todayTasks }
-  }, [tasks, today])
+    return { overdue, todayTasks, tomorrowTasks }
+  }, [tasks, today, tomorrow])
 
   const handleStartPomodoro = (taskId: string) => {
     startForTask(taskId)
@@ -60,7 +66,7 @@ export default function TodayPage() {
     onStartPomodoro: handleStartPomodoro
   }
 
-  const isEmpty = overdue.length === 0 && todayTasks.length === 0
+  const isEmpty = overdue.length === 0 && todayTasks.length === 0 && tomorrowTasks.length === 0
 
   return (
     <Stack gap="md">
@@ -85,6 +91,13 @@ export default function TodayPage() {
             <Divider label={<Text size="xs" c="dimmed" fw={600}>{t('today.today')}</Text>} labelPosition="left" />
           )}
           <TaskList tasks={todayTasks} {...sharedListProps} />
+        </Stack>
+      )}
+
+      {tomorrowTasks.length > 0 && (
+        <Stack gap="xs" mt="sm">
+          <Divider label={<Text size="xs" c="dimmed" fw={600}>{t('today.tomorrow')}</Text>} labelPosition="left" />
+          <TaskList tasks={tomorrowTasks} {...sharedListProps} />
         </Stack>
       )}
 
