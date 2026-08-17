@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { DndContext, type DragEndEvent, closestCenter } from '@dnd-kit/core'
+import { DndContext, PointerSensor, type DragEndEvent, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { ActionIcon, Button, Group, Stack, Title } from '@mantine/core'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import dayjs from 'dayjs'
@@ -26,6 +26,13 @@ export default function CalendarPage() {
   const projects = useProjectsStore((s) => s.projects)
   const [weekStart, setWeekStart] = useState(() => startOfWeek(dayjs()))
   const [editingTask, setEditingTask] = useState<Task | null>(null)
+
+  // Require the pointer to move at least 5 px before a drag starts.
+  // Without this, dnd-kit intercepts pointerdown immediately and prevents
+  // the click event from reaching onClick handlers (task detail doesn't open).
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  )
 
   const projectById = useMemo(() => new Map(projects.map((p) => [p.id, p])), [projects])
 
@@ -105,7 +112,7 @@ export default function CalendarPage() {
           <Title order={4}>{weekLabel}</Title>
         </Group>
       </Group>
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <Group align="flex-start" wrap="nowrap" gap="md" style={{ flex: 1, overflow: 'hidden' }}>
           <UnscheduledList
             tasks={unscheduledTasks}
