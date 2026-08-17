@@ -37,6 +37,7 @@ export const IpcChannels = {
   settingsSet: 'settings:set',
 
   notificationsShow: 'notifications:show',
+  notificationClicked: 'notifications:clicked',
 
   syncGetPath: 'sync:getPath',
   syncSelectPath: 'sync:selectPath',

@@ -53,12 +53,22 @@ function AppData() {
   }, [loadProjects, loadTags, loadTasks])
 
   useEffect(() => {
+    // Primary path: notification click sends a direct IPC event — reliable on all platforms.
+    const unsubscribe = window.api.notifications.onClicked(() => {
+      const { reminderSentAt, dismissReminder } = useTimerStore.getState()
+      if (reminderSentAt) dismissReminder()
+    })
+    // Fallback: also dismiss when the window gains focus (covers the case where
+    // the user switches to the app without clicking the notification itself).
     const handleFocus = () => {
       const { reminderSentAt, dismissReminder } = useTimerStore.getState()
       if (reminderSentAt) dismissReminder()
     }
     window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
+    return () => {
+      unsubscribe()
+      window.removeEventListener('focus', handleFocus)
+    }
   }, [])
 
   return null

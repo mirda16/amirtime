@@ -75,7 +75,11 @@ const api = {
   },
   notifications: {
     show: (opts: { title: string; body: string }): Promise<void> =>
-      ipcRenderer.invoke(IpcChannels.notificationsShow, opts)
+      ipcRenderer.invoke(IpcChannels.notificationsShow, opts),
+    onClicked: (callback: () => void): (() => void) => {
+      ipcRenderer.on(IpcChannels.notificationClicked, callback)
+      return () => ipcRenderer.removeListener(IpcChannels.notificationClicked, callback)
+    }
   },
   dataIO: {
     exportAll: (): Promise<ExportResult> => ipcRenderer.invoke(IpcChannels.dataIoExportAll),
