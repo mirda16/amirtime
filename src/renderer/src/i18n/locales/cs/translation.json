@@ -210,11 +210,16 @@
     "selectRange": "Vyberte rozsah dat",
     "totalTime": "Celkový sledovaný čas",
     "byDay": "Čas po dnech",
+    "byHour": "Čas podle hodiny dne",
+    "byWeekday": "Čas podle dne týdne",
+    "tasksDoneByWeekday": "Splněné úkoly podle dne týdne",
     "byProject": "Čas po projektech",
     "byTask": "Čas po úkolech",
     "hours": "Hodiny",
+    "tasks": "Úkoly",
     "time": "Čas",
     "share": "Podíl",
-    "noData": "V tomto období nebyl zaznamenán žádný čas."
+    "noData": "V tomto období nebyl zaznamenán žádný čas.",
+    "noDataDone": "V tomto období nebyly splněny žádné úkoly."
   }
 }

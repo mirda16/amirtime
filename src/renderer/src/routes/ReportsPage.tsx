@@ -83,6 +83,34 @@ export default function ReportsPage() {
     return days
   }, [range, summary])
 
+  const hourChartData = useMemo(() =>
+    (summary?.byHour ?? []).map((h) => ({
+      label: `${String(h.hour).padStart(2, '0')}:00`,
+      hours: Math.round((h.totalSeconds / 3600) * 100) / 100
+    })),
+    [summary]
+  )
+
+  const weekdayChartData = useMemo(() => {
+    const dayKeys = ['day0', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6'] as const
+    return (summary?.byWeekday ?? []).map((w) => ({
+      label: t(`settings.${dayKeys[w.weekday]}`),
+      hours: Math.round((w.totalSeconds / 3600) * 100) / 100
+    }))
+  }, [summary, t])
+
+  const doneByWeekdayData = useMemo(() => {
+    const dayKeys = ['day0', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6'] as const
+    return (summary?.tasksDoneByWeekday ?? []).map((w) => ({
+      label: t(`settings.${dayKeys[w.weekday]}`),
+      count: w.count
+    }))
+  }, [summary, t])
+
+  const hasHourData = (summary?.byHour ?? []).some((h) => h.totalSeconds > 0)
+  const hasWeekdayData = (summary?.byWeekday ?? []).some((w) => w.totalSeconds > 0)
+  const hasDoneData = (summary?.tasksDoneByWeekday ?? []).some((w) => w.count > 0)
+
   const totalSeconds = summary?.totalSeconds ?? 0
 
   return (
@@ -132,6 +160,60 @@ export default function ReportsPage() {
           withTooltip
           tooltipAnimationDuration={0}
         />
+      </Card>
+
+      <Card withBorder>
+        <Title order={4} mb="sm">
+          {t('reports.byHour')}
+        </Title>
+        {!hasHourData ? (
+          <Text c="dimmed">{t('reports.noData')}</Text>
+        ) : (
+          <BarChart
+            h={200}
+            data={hourChartData}
+            dataKey="label"
+            series={[{ name: 'hours', color: 'teal.6', label: t('reports.hours') }]}
+            withTooltip
+            tooltipAnimationDuration={0}
+          />
+        )}
+      </Card>
+
+      <Card withBorder>
+        <Title order={4} mb="sm">
+          {t('reports.byWeekday')}
+        </Title>
+        {!hasWeekdayData ? (
+          <Text c="dimmed">{t('reports.noData')}</Text>
+        ) : (
+          <BarChart
+            h={200}
+            data={weekdayChartData}
+            dataKey="label"
+            series={[{ name: 'hours', color: 'violet.6', label: t('reports.hours') }]}
+            withTooltip
+            tooltipAnimationDuration={0}
+          />
+        )}
+      </Card>
+
+      <Card withBorder>
+        <Title order={4} mb="sm">
+          {t('reports.tasksDoneByWeekday')}
+        </Title>
+        {!hasDoneData ? (
+          <Text c="dimmed">{t('reports.noDataDone')}</Text>
+        ) : (
+          <BarChart
+            h={200}
+            data={doneByWeekdayData}
+            dataKey="label"
+            series={[{ name: 'count', color: 'green.6', label: t('reports.tasks') }]}
+            withTooltip
+            tooltipAnimationDuration={0}
+          />
+        )}
       </Card>
 
       <Card withBorder>

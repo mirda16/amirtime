@@ -210,11 +210,16 @@
     "selectRange": "Select date range",
     "totalTime": "Total tracked time",
     "byDay": "Time per day",
+    "byHour": "Time by hour of day",
+    "byWeekday": "Time by day of week",
+    "tasksDoneByWeekday": "Tasks completed by day of week",
     "byProject": "Time per project",
     "byTask": "Time per task",
     "hours": "Hours",
+    "tasks": "Tasks",
     "time": "Time",
     "share": "Share",
-    "noData": "No tracked time in this period."
+    "noData": "No tracked time in this period.",
+    "noDataDone": "No completed tasks in this period."
   }
 }

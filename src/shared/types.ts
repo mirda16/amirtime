@@ -158,6 +158,21 @@ export interface ReportDayTotal {
   totalSeconds: number
 }
 
+export interface ReportHourTotal {
+  hour: number       // 0–23
+  totalSeconds: number
+}
+
+export interface ReportWeekdayTotal {
+  weekday: number    // 0 = Sun … 6 = Sat
+  totalSeconds: number
+}
+
+export interface ReportWeekdayDone {
+  weekday: number    // 0 = Sun … 6 = Sat
+  count: number
+}
+
 export interface ReportProjectTotal {
   projectId: string | null
   totalSeconds: number
@@ -173,6 +188,9 @@ export interface ReportTaskTotal {
 export interface ReportSummary {
   totalSeconds: number
   byDay: ReportDayTotal[]
+  byHour: ReportHourTotal[]
+  byWeekday: ReportWeekdayTotal[]
+  tasksDoneByWeekday: ReportWeekdayDone[]
   byProject: ReportProjectTotal[]
   byTask: ReportTaskTotal[]
 }
