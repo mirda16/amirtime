@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import { Box, Text } from '@mantine/core'
@@ -26,9 +27,32 @@ interface DayColumnProps {
 const SLOTS_PER_HOUR = 60 / SLOT_MINUTES
 const SLOT_HEIGHT_PX = ROW_HEIGHT_PX / SLOTS_PER_HOUR
 
+function useNowTop(): number | null {
+  const [top, setTop] = useState<number | null>(null)
+
+  useEffect(() => {
+    const calc = () => {
+      const now = dayjs()
+      const minutes = minutesFromGridStart(now)
+      if (minutes < 0 || minutes > CALENDAR_HOURS.length * 60) {
+        setTop(null)
+      } else {
+        setTop(Math.round(minutes * PIXELS_PER_MINUTE))
+      }
+    }
+
+    calc()
+    const id = setInterval(calc, 60_000)
+    return () => clearInterval(id)
+  }, [])
+
+  return top
+}
+
 export function DayColumn({ date, entries, projectById, onOpen, onUnschedule, onResize }: DayColumnProps) {
   const isToday = date.isSame(dayjs(), 'day')
   const totalHeight = CALENDAR_HOURS.length * ROW_HEIGHT_PX
+  const nowTop = useNowTop()
 
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
@@ -45,6 +69,32 @@ export function DayColumn({ date, entries, projectById, onOpen, onUnschedule, on
         </Text>
       </Box>
       <div style={{ position: 'relative', height: totalHeight }}>
+        {isToday && nowTop !== null && (
+          <div
+            style={{
+              position: 'absolute',
+              top: nowTop,
+              left: 0,
+              right: 0,
+              height: 2,
+              background: 'var(--mantine-color-red-6)',
+              zIndex: 10,
+              pointerEvents: 'none'
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                left: -4,
+                top: -4,
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                background: 'var(--mantine-color-red-6)'
+              }}
+            />
+          </div>
+        )}
         {CALENDAR_HOURS.map((hour) => (
           <div key={hour} style={{ display: 'flex', flexDirection: 'column' }}>
             {Array.from({ length: SLOTS_PER_HOUR }, (_, slotIndex) => (
