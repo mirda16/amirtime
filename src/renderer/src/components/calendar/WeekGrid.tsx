@@ -26,9 +26,9 @@ export function WeekGrid({ weekStart, tasksByDate, projectById, onOpen, onUnsche
         {CALENDAR_HOURS.map((hour) => (
           <div
             key={hour}
-            style={{ height: ROW_HEIGHT_PX, textAlign: 'right', paddingRight: 6 }}
+            style={{ height: ROW_HEIGHT_PX, textAlign: 'right', paddingRight: 6, position: 'relative' }}
           >
-            <Text size="xs" c="dimmed">
+            <Text size="xs" c="dimmed" style={{ position: 'absolute', top: 0, right: 6, transform: 'translateY(-50%)' }}>
               {String(hour).padStart(2, '0')}:00
             </Text>
           </div>
