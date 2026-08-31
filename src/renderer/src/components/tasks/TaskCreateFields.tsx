@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
   Button,
+  Divider,
   Group,
   MultiSelect,
   Select,
@@ -9,7 +10,8 @@ import {
   Textarea,
   TextInput
 } from '@mantine/core'
-import { DateInput } from '@mantine/dates'
+import { DateInput, TimeInput } from '@mantine/dates'
+import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import type { KanbanStatus, RecurrenceRule, TaskPriority } from '@shared/types'
 import { parseTimeInput } from '../../utils/formatDuration'
@@ -40,9 +42,20 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
   const [color, setColor] = useState<string | null>(null)
   const [priority, setPriority] = useState<TaskPriority>('none')
   const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(null)
+  const [scheduledDate, setScheduledDate] = useState<string | null>(null)
+  const [scheduledTimeStart, setScheduledTimeStart] = useState('')
+  const [scheduledTimeEnd, setScheduledTimeEnd] = useState('')
+
+  const buildScheduledAt = (date: string | null, hhmm: string): string | null => {
+    if (!hhmm) return null
+    const base = date ? dayjs(date) : dayjs()
+    const [hh, mm] = hhmm.split(':').map(Number)
+    return base.hour(hh).minute(mm).second(0).millisecond(0).toISOString()
+  }
 
   const handleCreate = async () => {
     if (!title.trim()) return
+    const anchorDate = recurrenceRule ? null : scheduledDate
     await createTask({
       title: title.trim(),
       description: description || null,
@@ -53,7 +66,9 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
       dueDate,
       timeEstimateMinutes: estimate.trim() === '' ? null : parseTimeInput(estimate),
       kanbanStatus: defaultKanbanStatus,
-      recurrenceRule
+      recurrenceRule,
+      scheduledAt: buildScheduledAt(anchorDate, scheduledTimeStart),
+      scheduledEnd: buildScheduledAt(anchorDate, scheduledTimeEnd)
     })
     onClose()
   }
@@ -126,6 +141,32 @@ export function TaskCreateFields({ onClose, defaultProjectId, defaultKanbanStatu
             { value: 'high', label: t('tasks.priorityHigh') }
           ]}
           allowDeselect={false}
+        />
+      </Group>
+      <Divider label={<Text size="xs" c="dimmed">{t('tasks.scheduledSection')}</Text>} labelPosition="left" />
+      <Group wrap="wrap">
+        {!recurrenceRule && (
+          <DateInput
+            label={t('tasks.scheduledDate')}
+            value={scheduledDate}
+            onChange={setScheduledDate}
+            clearable
+            valueFormat="DD.MM.YYYY"
+            highlightToday
+            style={{ flex: 1, minWidth: 120 }}
+          />
+        )}
+        <TimeInput
+          label={t('tasks.scheduledTimeStart')}
+          value={scheduledTimeStart}
+          onChange={(e) => setScheduledTimeStart(e.currentTarget.value)}
+          style={{ flex: 1, minWidth: 90 }}
+        />
+        <TimeInput
+          label={t('tasks.scheduledTimeEnd')}
+          value={scheduledTimeEnd}
+          onChange={(e) => setScheduledTimeEnd(e.currentTarget.value)}
+          style={{ flex: 1, minWidth: 90 }}
         />
       </Group>
       <RecurrenceFields value={recurrenceRule} onChange={setRecurrenceRule} />

@@ -84,6 +84,8 @@ export interface CreateTaskInput {
   priority?: TaskPriority
   kanbanStatus?: KanbanStatus
   dueDate?: string | null
+  scheduledAt?: string | null
+  scheduledEnd?: string | null
   timeEstimateMinutes?: number | null
   tagIds?: string[]
   recurrenceRule?: RecurrenceRule | null

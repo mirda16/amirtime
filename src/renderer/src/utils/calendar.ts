@@ -1,7 +1,41 @@
 import dayjs, { type Dayjs } from 'dayjs'
 import isoWeek from 'dayjs/plugin/isoWeek'
+import type { RecurrenceRule, Task } from '@shared/types'
 
 dayjs.extend(isoWeek)
+
+// ── Calendar entry (task placed on a specific day) ────────────────────────────
+
+export interface CalendarEntry {
+  task: Task
+  start: Dayjs       // effective start for this day (may differ from task.scheduledAt for recurring)
+  end: Dayjs
+  isRecurring: boolean
+}
+
+/** Returns true if a given day matches a recurrence rule and is within the task's due date. */
+export function matchesRecurrenceDay(
+  rule: RecurrenceRule,
+  day: Dayjs,
+  dueDate: string | null
+): boolean {
+  if (dueDate && day.isAfter(dayjs(dueDate), 'day')) return false
+  switch (rule.type) {
+    case 'daily':
+      return true
+    case 'weekly':
+      return (rule.weekdays ?? []).includes(day.day())
+    case 'monthly':
+      return day.date() === (rule.monthDay ?? 1)
+    case 'interval': {
+      // Show on every N-th day starting from the anchor date embedded in scheduledAt.
+      // We don't have a separate start date, so approximate: always show (conservative).
+      return true
+    }
+    default:
+      return false
+  }
+}
 
 export const CALENDAR_START_HOUR = 6
 export const CALENDAR_END_HOUR = 22

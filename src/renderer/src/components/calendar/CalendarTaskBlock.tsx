@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { ActionIcon, Text } from '@mantine/core'
-import { IconX } from '@tabler/icons-react'
+import { IconRepeat, IconX } from '@tabler/icons-react'
 import type { Project, Task } from '@shared/types'
 import { PIXELS_PER_MINUTE, SLOT_MINUTES, taskDraggableId } from '../../utils/calendar'
 
@@ -12,6 +12,7 @@ interface CalendarTaskBlockProps {
   top: number
   height: number
   durationMinutes: number
+  isRecurring: boolean
   onOpen: () => void
   onUnschedule: () => void
   onResize: (newDurationMinutes: number) => void
@@ -23,16 +24,19 @@ export function CalendarTaskBlock({
   top,
   height,
   durationMinutes,
+  isRecurring,
   onOpen,
   onUnschedule,
   onResize
 }: CalendarTaskBlockProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: taskDraggableId(task.id)
+    id: taskDraggableId(task.id),
+    disabled: isRecurring
   })
   const [resizeDelta, setResizeDelta] = useState(0)
 
   const handleResizeStart = (e: React.PointerEvent) => {
+    if (isRecurring) return
     e.stopPropagation()
     e.preventDefault()
     const startY = e.clientY
@@ -58,14 +62,13 @@ export function CalendarTaskBlock({
   }
 
   const customColor = task.color ?? project?.color ?? null
-  const background = customColor ?? 'var(--mantine-color-blue-light)'
+  const background = customColor ?? (isRecurring ? 'var(--mantine-color-violet-light)' : 'var(--mantine-color-blue-light)')
   const textColor = customColor ? 'white' : undefined
 
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
+      {...(isRecurring ? {} : { ...attributes, ...listeners })}
       onClick={onOpen}
       style={{
         position: 'absolute',
@@ -78,40 +81,47 @@ export function CalendarTaskBlock({
         zIndex: isDragging ? 100 : 1,
         background,
         borderRadius: 4,
+        borderLeft: isRecurring ? '3px solid var(--mantine-color-violet-6)' : undefined,
         padding: '2px 6px',
-        cursor: 'grab',
+        cursor: isRecurring ? 'pointer' : 'grab',
         overflow: 'hidden'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}>
-        <Text size="xs" fw={500} truncate c={textColor}>
+        <Text size="xs" fw={500} truncate c={textColor} style={{ flex: 1 }}>
           {task.title}
         </Text>
-        <ActionIcon
-          size="xs"
-          variant="transparent"
-          c={textColor}
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={(e) => {
-            e.stopPropagation()
-            onUnschedule()
-          }}
-        >
-          <IconX size={12} />
-        </ActionIcon>
+        {isRecurring ? (
+          <IconRepeat size={11} style={{ opacity: 0.6, flexShrink: 0 }} color={textColor} />
+        ) : (
+          <ActionIcon
+            size="xs"
+            variant="transparent"
+            c={textColor}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              onUnschedule()
+            }}
+          >
+            <IconX size={12} />
+          </ActionIcon>
+        )}
       </div>
-      <div
-        onPointerDown={handleResizeStart}
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 6,
-          cursor: 'ns-resize'
-        }}
-      />
+      {!isRecurring && (
+        <div
+          onPointerDown={handleResizeStart}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 6,
+            cursor: 'ns-resize'
+          }}
+        />
+      )}
     </div>
   )
 }

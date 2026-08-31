@@ -1,6 +1,7 @@
 import type { Dayjs } from 'dayjs'
 import { Text } from '@mantine/core'
 import type { Project, Task } from '@shared/types'
+import type { CalendarEntry } from '../../utils/calendar'
 import { CALENDAR_HOURS, ROW_HEIGHT_PX, weekDays } from '../../utils/calendar'
 import { DayColumn } from './DayColumn'
 
@@ -8,7 +9,7 @@ const HEADER_HEIGHT = 40
 
 interface WeekGridProps {
   weekStart: Dayjs
-  tasksByDate: Map<string, Task[]>
+  tasksByDate: Map<string, CalendarEntry[]>
   projectById: Map<string, Project>
   onOpen: (task: Task) => void
   onUnschedule: (task: Task) => void
@@ -37,7 +38,7 @@ export function WeekGrid({ weekStart, tasksByDate, projectById, onOpen, onUnsche
         <DayColumn
           key={date.format('YYYY-MM-DD')}
           date={date}
-          tasks={tasksByDate.get(date.format('YYYY-MM-DD')) ?? []}
+          entries={tasksByDate.get(date.format('YYYY-MM-DD')) ?? []}
           projectById={projectById}
           onOpen={onOpen}
           onUnschedule={onUnschedule}

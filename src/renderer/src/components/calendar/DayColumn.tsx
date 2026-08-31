@@ -2,6 +2,7 @@ import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import { Box, Text } from '@mantine/core'
 import type { Project, Task } from '@shared/types'
+import type { CalendarEntry } from '../../utils/calendar'
 import {
   CALENDAR_HOURS,
   ROW_HEIGHT_PX,
@@ -15,7 +16,7 @@ import { DroppableCell } from './DroppableCell'
 
 interface DayColumnProps {
   date: Dayjs
-  tasks: Task[]
+  entries: CalendarEntry[]
   projectById: Map<string, Project>
   onOpen: (task: Task) => void
   onUnschedule: (task: Task) => void
@@ -25,7 +26,7 @@ interface DayColumnProps {
 const SLOTS_PER_HOUR = 60 / SLOT_MINUTES
 const SLOT_HEIGHT_PX = ROW_HEIGHT_PX / SLOTS_PER_HOUR
 
-export function DayColumn({ date, tasks, projectById, onOpen, onUnschedule, onResize }: DayColumnProps) {
+export function DayColumn({ date, entries, projectById, onOpen, onUnschedule, onResize }: DayColumnProps) {
   const isToday = date.isSame(dayjs(), 'day')
   const totalHeight = CALENDAR_HOURS.length * ROW_HEIGHT_PX
 
@@ -55,20 +56,20 @@ export function DayColumn({ date, tasks, projectById, onOpen, onUnschedule, onRe
             ))}
           </div>
         ))}
-        {tasks.map((task) => {
-          const start = dayjs(task.scheduledAt)
-          const end = dayjs(task.scheduledEnd ?? task.scheduledAt)
+        {entries.map((entry) => {
+          const { task, start, end, isRecurring } = entry
           const durationMinutes = Math.max(SLOT_MINUTES, end.diff(start, 'minute'))
           const top = minutesFromGridStart(start) * PIXELS_PER_MINUTE
           const height = durationMinutes * PIXELS_PER_MINUTE
           return (
             <CalendarTaskBlock
-              key={task.id}
+              key={`${task.id}-${start.toISOString()}`}
               task={task}
               project={task.projectId ? projectById.get(task.projectId) : undefined}
               top={top}
               height={height}
               durationMinutes={durationMinutes}
+              isRecurring={isRecurring}
               onOpen={() => onOpen(task)}
               onUnschedule={() => onUnschedule(task)}
               onResize={(newDuration) => onResize(task, newDuration)}

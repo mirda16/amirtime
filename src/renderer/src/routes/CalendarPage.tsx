@@ -11,8 +11,10 @@ import { WeekGrid } from '../components/calendar/WeekGrid'
 import { useProjectsStore } from '../stores/projectsStore'
 import { useTasksStore } from '../stores/tasksStore'
 import {
+  type CalendarEntry,
   PIXELS_PER_MINUTE,
   SLOT_MINUTES,
+  matchesRecurrenceDay,
   parseCellId,
   parseTaskDraggableId,
   startOfWeek,
@@ -36,20 +38,44 @@ export default function CalendarPage() {
 
   const projectById = useMemo(() => new Map(projects.map((p) => [p.id, p])), [projects])
 
+  const days = useMemo(() => weekDays(weekStart), [weekStart])
+
   const activeTasks = tasks.filter((task) => !task.isDone)
+  // Unscheduled: no scheduledAt AND (no recurrenceRule OR no scheduled time on the rule)
   const unscheduledTasks = activeTasks.filter((task) => !task.scheduledAt)
 
   const tasksByDate = useMemo(() => {
-    const map = new Map<string, Task[]>()
+    const map = new Map<string, CalendarEntry[]>()
+
     for (const task of activeTasks) {
       if (!task.scheduledAt) continue
-      const dateKey = dayjs(task.scheduledAt).format('YYYY-MM-DD')
-      const list = map.get(dateKey) ?? []
-      list.push(task)
-      map.set(dateKey, list)
+      const anchor = dayjs(task.scheduledAt)
+      const anchorEnd = task.scheduledEnd ? dayjs(task.scheduledEnd) : anchor.add(60, 'minute')
+      const durationMin = Math.max(30, anchorEnd.diff(anchor, 'minute'))
+
+      if (!task.recurrenceRule) {
+        // Non-recurring: single placement
+        const dateKey = anchor.format('YYYY-MM-DD')
+        const list = map.get(dateKey) ?? []
+        list.push({ task, start: anchor, end: anchorEnd, isRecurring: false })
+        map.set(dateKey, list)
+      } else {
+        // Recurring: place on every matching day in this week's view
+        const h = anchor.hour()
+        const m = anchor.minute()
+        for (const day of days) {
+          if (!matchesRecurrenceDay(task.recurrenceRule, day, task.dueDate)) continue
+          const start = day.hour(h).minute(m).second(0).millisecond(0)
+          const end = start.add(durationMin, 'minute')
+          const dateKey = day.format('YYYY-MM-DD')
+          const list = map.get(dateKey) ?? []
+          list.push({ task, start, end, isRecurring: true })
+          map.set(dateKey, list)
+        }
+      }
     }
     return map
-  }, [activeTasks])
+  }, [activeTasks, days])
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -92,7 +118,6 @@ export default function CalendarPage() {
     })
   }
 
-  const days = weekDays(weekStart)
   const weekLabel = `${days[0].format('D.M.')} – ${days[6].format('D.M.YYYY')}`
 
   return (

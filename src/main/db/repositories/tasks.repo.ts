@@ -152,9 +152,10 @@ export const tasksRepo = {
     db.prepare(
       `INSERT INTO tasks (
         id, title, description, project_id, color, priority, is_done,
-        due_date, time_estimate_minutes, sort_order, time_spent_seconds, kanban_status,
+        due_date, scheduled_at, scheduled_end, time_estimate_minutes,
+        sort_order, time_spent_seconds, kanban_status,
         recurrence_rule, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, ?, ?, ?, ?)`
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)`
     ).run(
       id,
       input.title,
@@ -163,6 +164,8 @@ export const tasksRepo = {
       input.color ?? null,
       input.priority ?? 'none',
       input.dueDate ?? null,
+      input.scheduledAt ?? null,
+      input.scheduledEnd ?? null,
       input.timeEstimateMinutes ?? null,
       maxOrder + 1,
       input.kanbanStatus ?? 'backlog',

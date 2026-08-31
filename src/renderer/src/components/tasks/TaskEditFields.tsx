@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import {
+  ActionIcon,
   Button,
+  Divider,
   Group,
   MultiSelect,
   Select,
@@ -9,13 +11,30 @@ import {
   Textarea,
   TextInput
 } from '@mantine/core'
+import { IconX } from '@tabler/icons-react'
 import {
   parseTimeInput,
   hhmmToSeconds,
   minutesToHHMM,
   secondsToHHMM
 } from '../../utils/formatDuration'
-import { DateInput } from '@mantine/dates'
+import dayjs from 'dayjs'
+
+// Extract HH:MM string from an ISO datetime string, or '' if null
+function isoToHHMM(iso: string | null): string {
+  if (!iso) return ''
+  const d = dayjs(iso)
+  return `${String(d.hour()).padStart(2, '0')}:${String(d.minute()).padStart(2, '0')}`
+}
+
+// Combine a date string (YYYY-MM-DD or ISO) with HH:MM into an ISO datetime
+function buildIso(dateIso: string | null, hhmm: string): string | null {
+  if (!hhmm) return null
+  const base = dateIso ? dayjs(dateIso) : dayjs()
+  const [hh, mm] = hhmm.split(':').map(Number)
+  return base.hour(hh).minute(mm).second(0).millisecond(0).toISOString()
+}
+import { DateInput, TimeInput } from '@mantine/dates'
 import { useDebouncedCallback } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
 import type { RecurrenceRule, Task, TaskPriority, UpdateTaskInput } from '@shared/types'
@@ -48,6 +67,12 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const [priority, setPriority] = useState<TaskPriority>(task.priority)
   const [timeSpent, setTimeSpent] = useState(secondsToHHMM(task.timeSpentSeconds))
   const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(task.recurrenceRule)
+  // Scheduled date (YYYY-MM-DD) — not shown for recurring tasks (day comes from recurrence rule)
+  const [scheduledDate, setScheduledDate] = useState<string | null>(
+    task.scheduledAt ? dayjs(task.scheduledAt).format('YYYY-MM-DD') : null
+  )
+  const [scheduledTimeStart, setScheduledTimeStart] = useState(isoToHHMM(task.scheduledAt))
+  const [scheduledTimeEnd, setScheduledTimeEnd] = useState(isoToHHMM(task.scheduledEnd))
 
   useEffect(() => {
     setTitle(task.title)
@@ -60,6 +85,9 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
     setPriority(task.priority)
     setTimeSpent(secondsToHHMM(task.timeSpentSeconds))
     setRecurrenceRule(task.recurrenceRule)
+    setScheduledDate(task.scheduledAt ? dayjs(task.scheduledAt).format('YYYY-MM-DD') : null)
+    setScheduledTimeStart(isoToHHMM(task.scheduledAt))
+    setScheduledTimeEnd(isoToHHMM(task.scheduledEnd))
   }, [task])
 
   const debouncedUpdate = useDebouncedCallback((patch: UpdateTaskInput) => {
@@ -129,6 +157,47 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
   const handleRecurrenceChange = (rule: RecurrenceRule | null) => {
     setRecurrenceRule(rule)
     void updateTask(task.id, { recurrenceRule: rule })
+  }
+
+  // For recurring tasks: date anchor is today (only time matters for calendar rendering)
+  const scheduledAnchorDate = recurrenceRule
+    ? dayjs().format('YYYY-MM-DD')
+    : scheduledDate
+
+  const applyScheduledTime = (startHHMM: string, endHHMM: string) => {
+    if (!startHHMM) {
+      void updateTask(task.id, { scheduledAt: null, scheduledEnd: null })
+    } else {
+      void updateTask(task.id, {
+        scheduledAt: buildIso(scheduledAnchorDate, startHHMM),
+        scheduledEnd: endHHMM ? buildIso(scheduledAnchorDate, endHHMM) : null
+      })
+    }
+  }
+
+  const handleScheduledDateChange = (value: string | null) => {
+    setScheduledDate(value)
+    void updateTask(task.id, {
+      scheduledAt: buildIso(value, scheduledTimeStart),
+      scheduledEnd: scheduledTimeEnd ? buildIso(value, scheduledTimeEnd) : null
+    })
+  }
+
+  const handleScheduledTimeStartChange = (hhmm: string) => {
+    setScheduledTimeStart(hhmm)
+    applyScheduledTime(hhmm, scheduledTimeEnd)
+  }
+
+  const handleScheduledTimeEndChange = (hhmm: string) => {
+    setScheduledTimeEnd(hhmm)
+    applyScheduledTime(scheduledTimeStart, hhmm)
+  }
+
+  const handleClearScheduled = () => {
+    setScheduledDate(null)
+    setScheduledTimeStart('')
+    setScheduledTimeEnd('')
+    void updateTask(task.id, { scheduledAt: null, scheduledEnd: null })
   }
 
   const handleDelete = async () => {
@@ -215,6 +284,42 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
           allowDeselect={false}
         />
       </Group>
+      <Divider label={<Text size="xs" c="dimmed">{t('tasks.scheduledSection')}</Text>} labelPosition="left" />
+      <Stack gap="xs">
+        <Group align="flex-end" wrap="wrap">
+          {!recurrenceRule && (
+            <DateInput
+              label={t('tasks.scheduledDate')}
+              value={scheduledDate}
+              onChange={handleScheduledDateChange}
+              clearable
+              valueFormat="DD.MM.YYYY"
+              highlightToday
+              style={{ flex: 1, minWidth: 120 }}
+            />
+          )}
+          <TimeInput
+            label={t('tasks.scheduledTimeStart')}
+            value={scheduledTimeStart}
+            onChange={(e) => handleScheduledTimeStartChange(e.currentTarget.value)}
+            style={{ flex: 1, minWidth: 90 }}
+          />
+          <TimeInput
+            label={t('tasks.scheduledTimeEnd')}
+            value={scheduledTimeEnd}
+            onChange={(e) => handleScheduledTimeEndChange(e.currentTarget.value)}
+            style={{ flex: 1, minWidth: 90 }}
+          />
+          {(scheduledTimeStart || scheduledDate) && (
+            <ActionIcon variant="subtle" color="gray" onClick={handleClearScheduled} mb={1} title={t('tasks.scheduledClear')}>
+              <IconX size={16} />
+            </ActionIcon>
+          )}
+        </Group>
+        {recurrenceRule && !scheduledTimeStart && (
+          <Text size="xs" c="dimmed">{t('tasks.scheduledTimeHint')}</Text>
+        )}
+      </Stack>
       <RecurrenceFields value={recurrenceRule} onChange={handleRecurrenceChange} />
       <SubtaskList taskId={task.id} />
       <Group justify="space-between" mt="md">
