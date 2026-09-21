@@ -1,6 +1,6 @@
 {
   "name": "amirtime",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Personal task and time management app",
   "main": "./out/main/index.js",
   "author": "Mira <mirda16@gmail.com>",
@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "postinstall": "electron-rebuild -f -w better-sqlite3",
     "dist:win": "electron-vite build && electron-builder --win --publish never",
-    "dist:linux": "electron-vite build && electron-builder --linux --publish never"
+    "dist:linux": "electron-vite build && electron-builder --linux --publish never",
+    "clean": "rm -rf out dist",
+    "clean:dist": "rm -rf dist"
   },
   "build": {
     "appId": "com.mira.amirtime",

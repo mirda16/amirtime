@@ -8,8 +8,15 @@ import { TaskFormModal } from '../components/tasks/TaskFormModal'
 import { TaskList } from '../components/tasks/TaskList'
 import { usePomodoroStore } from '../stores/pomodoroStore'
 import { useProjectsStore } from '../stores/projectsStore'
+import { useSettingsStore } from '../stores/settingsStore'
 import { useTagsStore } from '../stores/tagsStore'
 import { useTasksStore } from '../stores/tasksStore'
+
+function isRecurringVisible(task: Task, advanceDays: number): boolean {
+  if (!task.recurrenceRule || !task.dueDate || advanceDays === 0) return true
+  const showFrom = dayjs(task.dueDate).subtract(advanceDays, 'day')
+  return !dayjs().isBefore(showFrom, 'day')
+}
 
 export default function TodayPage() {
   const { t } = useTranslation()
@@ -22,6 +29,7 @@ export default function TodayPage() {
   const tags = useTagsStore((s) => s.tags)
 
   const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const recurrenceAdvanceDays = useSettingsStore((s) => s.settings.recurrenceAdvanceDays)
 
   const today = dayjs().format('YYYY-MM-DD')
   const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD')
@@ -33,6 +41,7 @@ export default function TodayPage() {
 
     for (const task of tasks) {
       if (task.isDone) continue
+      if (!isRecurringVisible(task, recurrenceAdvanceDays)) continue
       const isScheduledToday = task.scheduledAt?.startsWith(today)
       const isDueToday = task.dueDate === today
       const isOverdue = task.dueDate && task.dueDate < today
@@ -49,7 +58,7 @@ export default function TodayPage() {
     }
 
     return { overdue, todayTasks, tomorrowTasks }
-  }, [tasks, today, tomorrow])
+  }, [tasks, today, tomorrow, recurrenceAdvanceDays])
 
   const handleStartPomodoro = (taskId: string) => {
     startForTask(taskId)

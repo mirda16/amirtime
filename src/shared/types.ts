@@ -128,6 +128,22 @@ export interface UpdateSubtaskInput {
   isDone?: boolean
 }
 
+export interface TaskComment {
+  id: string
+  taskId: string
+  content: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateCommentInput {
+  content: string
+}
+
+export interface UpdateCommentInput {
+  content?: string
+}
+
 export type TimeEntryType = 'manual' | 'pomodoro_work' | 'pomodoro_break'
 
 export interface TimeEntry {
@@ -214,6 +230,8 @@ export interface AppSettings {
   workdayStart: string
   workdayEnd: string
   workdayDays: number[]
+  /** Days before due date a recurring task becomes visible (0 = always visible) */
+  recurrenceAdvanceDays: number
 }
 
 export interface ExportTables {
@@ -257,5 +275,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
   inactivityReminderMinutes: 10,
   workdayStart: '09:00',
   workdayEnd: '17:00',
-  workdayDays: [1, 2, 3, 4, 5]
+  workdayDays: [1, 2, 3, 4, 5],
+  recurrenceAdvanceDays: 0
 }

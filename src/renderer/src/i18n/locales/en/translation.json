@@ -78,7 +78,15 @@
     "recurrenceIntervalDays": "Repeat every",
     "recurrenceWeekdays": "Days of week",
     "recurrenceMonthDay": "Day of month",
-    "recurrenceBadge": "Repeating"
+    "recurrenceBadge": "Repeating",
+    "comments": "Comments",
+    "commentPlaceholder": "Add a comment…",
+    "commentAdd": "Send",
+    "commentEdit": "Edit",
+    "commentDelete": "Delete",
+    "commentDeleteConfirm": "Delete this comment?",
+    "commentEdited": "edited",
+    "commentNoComments": "No comments yet"
   },
   "projects": {
     "newProject": "New project",
@@ -165,7 +173,11 @@
     "syncNow": "Sync now",
     "syncCreated": "Sync file created — data exported",
     "syncConnected": "Connected — data merged from sync file",
-    "syncExportDone": "Sync file updated"
+    "syncExportDone": "Sync file updated",
+    "recurrenceSection": "Recurring tasks",
+    "recurrenceAdvanceDays": "Show in advance",
+    "recurrenceAdvanceDaysDesc": "How many days before the due date a recurring task appears in the task list. 0 = always visible.",
+    "recurrenceAdvanceOff": "Always visible"
   },
   "table": {
     "title": "Table",

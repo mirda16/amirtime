@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { IpcChannels } from '@shared/ipc-channels'
 import type {
   AppSettings,
+  CreateCommentInput,
   CreateProjectInput,
   CreateSubtaskInput,
   CreateTagInput,
@@ -12,8 +13,10 @@ import type {
   ReportSummary,
   Tag,
   Task,
+  TaskComment,
   TaskFilter,
   TimeEntry,
+  UpdateCommentInput,
   UpdateProjectInput,
   UpdateSubtaskInput,
   UpdateTagInput,
@@ -92,6 +95,16 @@ const api = {
       ipcRenderer.invoke(IpcChannels.subtasksUpdate, subtaskId, taskId, patch),
     delete: (subtaskId: string, taskId: string): Promise<Task> =>
       ipcRenderer.invoke(IpcChannels.subtasksDelete, subtaskId, taskId)
+  },
+  comments: {
+    getByTask: (taskId: string): Promise<TaskComment[]> =>
+      ipcRenderer.invoke(IpcChannels.commentsGetByTask, taskId),
+    create: (taskId: string, input: CreateCommentInput): Promise<TaskComment> =>
+      ipcRenderer.invoke(IpcChannels.commentsCreate, taskId, input),
+    update: (id: string, patch: UpdateCommentInput): Promise<TaskComment> =>
+      ipcRenderer.invoke(IpcChannels.commentsUpdate, id, patch),
+    delete: (id: string): Promise<void> =>
+      ipcRenderer.invoke(IpcChannels.commentsDelete, id)
   },
   sync: {
     getPath: (): Promise<string | null> => ipcRenderer.invoke(IpcChannels.syncGetPath),

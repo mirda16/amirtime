@@ -33,6 +33,11 @@ export const IpcChannels = {
   subtasksUpdate: 'subtasks:update',
   subtasksDelete: 'subtasks:delete',
 
+  commentsGetByTask: 'comments:getByTask',
+  commentsCreate: 'comments:create',
+  commentsUpdate: 'comments:update',
+  commentsDelete: 'comments:delete',
+
   settingsGetAll: 'settings:getAll',
   settingsSet: 'settings:set',
 

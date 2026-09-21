@@ -1,3 +1,4 @@
+import { registerCommentsIpc } from './comments.ipc'
 import { registerDataIoIpc } from './dataIo.ipc'
 import { registerSubtasksIpc } from './subtasks.ipc'
 import { registerNotificationsIpc } from './notifications.ipc'
@@ -10,6 +11,7 @@ import { registerTasksIpc } from './tasks.ipc'
 import { registerTimeEntriesIpc } from './timeEntries.ipc'
 
 export function registerIpcHandlers(): void {
+  registerCommentsIpc()
   registerProjectsIpc()
   registerTagsIpc()
   registerTasksIpc()

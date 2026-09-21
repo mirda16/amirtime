@@ -209,6 +209,24 @@ export default function SettingsPage() {
         />
       </SimpleGrid>
 
+      <Title order={4}>{t('settings.recurrenceSection')}</Title>
+      <Select
+        label={t('settings.recurrenceAdvanceDays')}
+        description={t('settings.recurrenceAdvanceDaysDesc')}
+        value={String(settings.recurrenceAdvanceDays)}
+        onChange={(v) => void updateSetting('recurrenceAdvanceDays', Number(v ?? '0'))}
+        data={[
+          { value: '0', label: t('settings.recurrenceAdvanceOff') },
+          { value: '1', label: '1 ' + t('settings.days') },
+          { value: '2', label: '2 ' + t('settings.days') },
+          { value: '3', label: '3 ' + t('settings.days') },
+          { value: '5', label: '5 ' + t('settings.days') },
+          { value: '7', label: '7 ' + t('settings.days') },
+          { value: '14', label: '14 ' + t('settings.days') }
+        ]}
+        allowDeselect={false}
+      />
+
       <Title order={4}>{t('settings.dataSection')}</Title>
       <Text size="sm" c="dimmed">
         {t('settings.dataDescription')}

@@ -40,6 +40,7 @@ import { useTranslation } from 'react-i18next'
 import type { RecurrenceRule, Task, TaskPriority, UpdateTaskInput } from '@shared/types'
 import { ColorPickerPopover } from '../common/ColorPickerPopover'
 import { SubtaskList } from './SubtaskList'
+import { TaskComments } from './TaskComments'
 import { useProjectsStore } from '../../stores/projectsStore'
 import { useTagsStore } from '../../stores/tagsStore'
 import { useTasksStore } from '../../stores/tasksStore'
@@ -322,6 +323,7 @@ export function TaskEditFields({ task, onClose }: TaskEditFieldsProps) {
       </Stack>
       <RecurrenceFields value={recurrenceRule} onChange={handleRecurrenceChange} />
       <SubtaskList taskId={task.id} />
+      <TaskComments taskId={task.id} />
       <Group justify="space-between" mt="md">
         <Button color="red" variant="subtle" onClick={handleDelete}>
           {t('common.delete')}

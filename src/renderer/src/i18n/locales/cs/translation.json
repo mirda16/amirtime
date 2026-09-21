@@ -78,7 +78,15 @@
     "recurrenceIntervalDays": "Opakovat každých",
     "recurrenceWeekdays": "Dny v týdnu",
     "recurrenceMonthDay": "Den v měsíci",
-    "recurrenceBadge": "Opakuje se"
+    "recurrenceBadge": "Opakuje se",
+    "comments": "Komentáře",
+    "commentPlaceholder": "Přidat komentář…",
+    "commentAdd": "Odeslat",
+    "commentEdit": "Upravit",
+    "commentDelete": "Smazat",
+    "commentDeleteConfirm": "Smazat tento komentář?",
+    "commentEdited": "upraveno",
+    "commentNoComments": "Zatím žádné komentáře"
   },
   "projects": {
     "newProject": "Nový projekt",
@@ -165,7 +173,11 @@
     "syncNow": "Synchronizovat nyní",
     "syncCreated": "Sync soubor vytvořen — data exportována",
     "syncConnected": "Připojeno — data sloučena ze sync souboru",
-    "syncExportDone": "Sync soubor aktualizován"
+    "syncExportDone": "Sync soubor aktualizován",
+    "recurrenceSection": "Opakující se úkoly",
+    "recurrenceAdvanceDays": "Zobrazit předem",
+    "recurrenceAdvanceDaysDesc": "Kolik dní před termínem se opakující se úkol zobrazí v seznamu. 0 = vždy viditelný.",
+    "recurrenceAdvanceOff": "Vždy viditelný"
   },
   "table": {
     "title": "Tabulka",

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Button, Group, Select, Stack, TextInput, Title } from '@mantine/core'
 import { useHotkeys } from '@mantine/hooks'
 import { IconPlus, IconSearch } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { Task } from '@shared/types'
@@ -9,10 +10,18 @@ import { TaskFormModal } from '../components/tasks/TaskFormModal'
 import { TaskList } from '../components/tasks/TaskList'
 import { useProjectsStore } from '../stores/projectsStore'
 import { usePomodoroStore } from '../stores/pomodoroStore'
+import { useSettingsStore } from '../stores/settingsStore'
 import { useTagsStore } from '../stores/tagsStore'
 import { useTasksStore } from '../stores/tasksStore'
 import { useUiFilterStore } from '../stores/uiFilterStore'
 import { PRIORITY_ORDER } from '../utils/priority'
+
+/** Returns false if the task is a recurring task hidden by the advance-days setting */
+function isRecurringVisible(task: Task, advanceDays: number): boolean {
+  if (!task.recurrenceRule || !task.dueDate || advanceDays === 0) return true
+  const showFrom = dayjs(task.dueDate).subtract(advanceDays, 'day')
+  return !dayjs().isBefore(showFrom, 'day')
+}
 
 type SortKey = 'default' | 'priority' | 'dueDate' | 'timeSpent'
 
@@ -29,6 +38,7 @@ export default function TasksPage() {
   const tags = useTagsStore((s) => s.tags)
   const selectedProjectId = useUiFilterStore((s) => s.selectedProjectId)
   const selectedTagId = useUiFilterStore((s) => s.selectedTagId)
+  const recurrenceAdvanceDays = useSettingsStore((s) => s.settings.recurrenceAdvanceDays)
 
   const [modalOpened, setModalOpened] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
@@ -55,6 +65,7 @@ export default function TasksPage() {
     .filter((task) => {
       if (selectedProjectId && task.projectId !== selectedProjectId) return false
       if (selectedTagId && !task.tagIds.includes(selectedTagId)) return false
+      if (!isRecurringVisible(task, recurrenceAdvanceDays)) return false
       if (searchQuery) {
         const q = searchQuery.toLowerCase()
         return (
